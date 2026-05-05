@@ -6,6 +6,7 @@ import type { ApiResponse } from './types/api-response';
 import { ApiService } from './services/api.service';
 import Pagination from './components/Pagination';
 import Search, { searchStorageKey } from './components/Search';
+import Loader from './components/Loader';
 
 interface AppProps {
   dummy?: string;
@@ -96,6 +97,7 @@ class App extends Component<AppProps, State> {
           )}
           <h2>Results Section</h2>
           <ErrorBoundary>
+            <Loader isLoading={this.state.loading} />
             <Results
               hasError={this.state.hasError}
               items={this.state.apiResponse?.comicStrips}
