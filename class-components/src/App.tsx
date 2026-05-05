@@ -5,6 +5,7 @@ import Results from './components/Results';
 import type { ApiResponse } from './types/api-response';
 import { ApiService } from './services/api.service';
 import Pagination from './components/Pagination';
+import Search, { searchStorageKey } from './components/Search';
 
 interface AppProps {
   dummy?: string;
@@ -20,39 +21,49 @@ interface State {
 class App extends Component<AppProps, State> {
   constructor(props: AppProps) {
     super(props);
+
+    const savedTerm = localStorage.getItem(searchStorageKey) ?? '';
+
     this.state = {
       hasError: false,
       apiResponse: undefined,
       loading: false,
-      searchTerm: '',
+      searchTerm: savedTerm,
     };
+  }
+
+  componentDidMount() {
+    this.callApi(0);
   }
 
   triggerError = () => {
     this.setState({ hasError: true });
   };
 
-  handleSearch = () => {
-    this.callApi(7);
+  handleSearch = (data: string) => {
+    this.callApi(0, data);
   };
 
-  callApi = (page: number) => {
-    let storedSearchTerm = '';
+  callApi = (page: number, data?: string) => {
+    let searchInput = '';
+
     this.setState(
       (prevState) => {
-        storedSearchTerm = prevState.searchTerm;
+        searchInput = data ?? prevState.searchTerm;
+
         return { loading: true };
       },
       async () => {
         try {
-          const data = await ApiService.search(storedSearchTerm, page);
+          const data = await ApiService.search(searchInput, page);
 
           console.log('STAPI Full Response:', data);
 
-          this.setState({
+          this.setState((prev) => ({
             apiResponse: data,
             loading: false,
-          });
+            searchTerm: searchInput ?? prev.searchTerm,
+          }));
         } catch (error) {
           console.error('API Error:', error);
           this.setState({
@@ -69,9 +80,11 @@ class App extends Component<AppProps, State> {
       <div className="app-wrapper">
         <section className="search-container">
           <h2>Search Section</h2>
-          <button onClick={this.handleSearch} className="error-btn">
-            Api Call
-          </button>
+          <Search
+            onSearch={this.handleSearch}
+            isLoading={this.state.loading}
+            initialValue={this.state.searchTerm}
+          />
         </section>
 
         <section className="results-container">
