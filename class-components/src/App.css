@@ -196,3 +196,7 @@
   padding: 40px 20px;
   position: relative;
 }
+
+.error-btn {
+  margin-bottom: 40px;
+}

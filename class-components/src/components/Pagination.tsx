@@ -97,7 +97,6 @@ const styles: { [key: string]: CSSProperties } = {
     marginTop: '30px',
     marginBottom: '30px',
     alignItems: 'center',
-    fontFamily: 'Inter, system-ui, sans-serif',
   },
   navBtn: {
     padding: '8px 14px',
