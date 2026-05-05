@@ -1,7 +1,10 @@
 import { Component } from 'react';
+import type { ComicStrip } from '../types/comic-strip';
+import ItemCard from './ItemCard';
 
 interface ResultsProps {
   hasError: boolean;
+  items: ComicStrip[] | undefined;
 }
 
 class Results extends Component<ResultsProps> {
@@ -10,18 +13,21 @@ class Results extends Component<ResultsProps> {
       throw new Error('Simulation: Results component crashed!');
     }
 
+    const { items } = this.props;
+
     return (
       <div className="results-list">
         <h3>Results Area</h3>
+
         <div
-          className="result-item"
-          style={{
-            border: '1px solid #ccc',
-            padding: '10px',
-            margin: '10px 0',
-          }}
+          className="results-grid"
+          style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}
         >
-          <strong>Item Name</strong>: Item Description
+          {!items || items.length === 0 ? (
+            <p>No results found. Try a different search term.</p>
+          ) : (
+            items.map((item) => <ItemCard key={item.uid} item={item} />)
+          )}
         </div>
       </div>
     );
