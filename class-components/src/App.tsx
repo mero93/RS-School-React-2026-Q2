@@ -4,6 +4,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import Results from './components/Results';
 import type { ApiResponse } from './types/api-response';
 import { ApiService } from './services/api.service';
+import Pagination from './components/Pagination';
 
 interface AppProps {
   dummy?: string;
@@ -74,6 +75,12 @@ class App extends Component<AppProps, State> {
         </section>
 
         <section className="results-container">
+          {this.state.apiResponse && (
+            <Pagination
+              page={this.state.apiResponse.page}
+              onPageChange={(page: number) => this.callApi(page)}
+            />
+          )}
           <h2>Results Section</h2>
           <ErrorBoundary>
             <Results hasError={this.state.hasError} />
