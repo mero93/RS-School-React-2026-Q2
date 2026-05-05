@@ -20,11 +20,17 @@ class Loader extends Component<LoaderProps> {
 }
 
 const overlayStyle: React.CSSProperties = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  justifyContent: 'center',
-  padding: '20px',
+  justifyContent: 'start',
+  padding: '50px',
+  backdropFilter: 'blur(6px)',
 };
 
 const spinnerStyle: React.CSSProperties = {

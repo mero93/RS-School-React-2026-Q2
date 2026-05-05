@@ -191,3 +191,8 @@
     transform: rotate(360deg);
   }
 }
+
+.results-container {
+  padding: 40px 20px;
+  position: relative;
+}

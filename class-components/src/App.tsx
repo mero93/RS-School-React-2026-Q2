@@ -58,11 +58,10 @@ class App extends Component<AppProps, State> {
         try {
           const data = await ApiService.search(searchInput, page);
 
-          console.log('STAPI Full Response:', data);
-
           this.setState((prev) => ({
             apiResponse: data,
             loading: false,
+            hasError: false,
             searchTerm: searchInput ?? prev.searchTerm,
           }));
         } catch (error) {
@@ -80,7 +79,6 @@ class App extends Component<AppProps, State> {
     return (
       <div className="app-wrapper">
         <section className="search-container">
-          <h2>Search Section</h2>
           <Search
             onSearch={this.handleSearch}
             isLoading={this.state.loading}
@@ -95,7 +93,6 @@ class App extends Component<AppProps, State> {
               onPageChange={(page: number) => this.callApi(page)}
             />
           )}
-          <h2>Results Section</h2>
           <ErrorBoundary>
             <Loader isLoading={this.state.loading} />
             <Results
