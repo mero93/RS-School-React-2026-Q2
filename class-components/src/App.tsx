@@ -96,7 +96,10 @@ class App extends Component<AppProps, State> {
           )}
           <h2>Results Section</h2>
           <ErrorBoundary>
-            <Results hasError={this.state.hasError} />
+            <Results
+              hasError={this.state.hasError}
+              items={this.state.apiResponse?.comicStrips}
+            />
           </ErrorBoundary>
         </section>
 
