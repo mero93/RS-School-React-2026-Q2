@@ -1,5 +1,6 @@
-import { Component, type ReactNode, type CSSProperties } from 'react';
-import type { PageData } from '../types/api-response';
+import { Component, type ReactNode } from 'react';
+import type { PageData } from '../../types/api-response';
+import './Pagination.css';
 
 interface PaginationProps {
   page: PageData;
@@ -43,9 +44,9 @@ class Pagination extends Component<PaginationProps> {
     const currentPage = pageNumber + 1;
 
     return (
-      <div style={styles.container}>
+      <div className="pagination-container">
         <button
-          style={styles.navBtn}
+          className="nav-btn"
           disabled={pageNumber === 0}
           onClick={() => onPageChange(pageNumber - 1)}
         >
@@ -61,14 +62,9 @@ class Pagination extends Component<PaginationProps> {
               key={`${p}-${idx}`}
               disabled={isEllipsis}
               onClick={() => typeof p === 'number' && onPageChange(p - 1)}
-              style={{
-                ...styles.pageBtn,
-                backgroundColor: isActive ? '#5d85ff' : '#fff',
-                color: isActive ? '#fff' : '#000',
-                borderColor: isActive ? '#5d85ff' : '#ccc',
-                cursor: isEllipsis ? 'default' : 'pointer',
-                fontWeight: isActive ? 'bold' : 'normal',
-              }}
+              className={`page-btn ${isActive ? 'active' : ''} ${
+                isEllipsis ? 'ellipsis' : ''
+              }`}
             >
               {p}
             </button>
@@ -76,7 +72,7 @@ class Pagination extends Component<PaginationProps> {
         })}
 
         <button
-          style={styles.navBtn}
+          className="nav-btn"
           disabled={pageNumber >= totalPages - 1}
           onClick={() => onPageChange(pageNumber + 1)}
         >
@@ -86,39 +82,5 @@ class Pagination extends Component<PaginationProps> {
     );
   }
 }
-
-const styles: { [key: string]: CSSProperties } = {
-  container: {
-    display: 'flex',
-    width: '100%',
-    justifyContent: 'center',
-    justifyItems: 'center',
-    gap: '8px',
-    marginTop: '30px',
-    marginBottom: '30px',
-    alignItems: 'center',
-  },
-  navBtn: {
-    padding: '8px 14px',
-    backgroundColor: '#333',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontSize: '14px',
-    fontWeight: '600',
-  },
-  pageBtn: {
-    minWidth: '36px',
-    height: '36px',
-    padding: '0 5px',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'all 0.2s ease',
-  },
-};
 
 export default Pagination;

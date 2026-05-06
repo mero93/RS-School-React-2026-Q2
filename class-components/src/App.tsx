@@ -1,12 +1,12 @@
 import { Component } from 'react';
 import './App.css';
 import ErrorBoundary from './components/ErrorBoundary';
-import Results from './components/Results';
+import Results from './components/Result/Results';
 import type { ApiResponse } from './types/api-response';
 import { ApiService } from './services/api.service';
-import Pagination from './components/Pagination';
-import Search, { searchStorageKey } from './components/Search';
-import Loader from './components/Loader';
+import Pagination from './components/Pagination/Pagination';
+import Search, { searchStorageKey } from './components/Search/Search';
+import Loader from './components/Loader/Loader';
 
 interface AppProps {
   dummy?: string;
