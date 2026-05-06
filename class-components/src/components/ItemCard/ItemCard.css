@@ -1,0 +1,30 @@
+.item-card {
+  width: 280px;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e1e1e1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.item-card-title {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #1a1a1a;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.item-card-text {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #636363;
+  line-height: 1.4;
+}
