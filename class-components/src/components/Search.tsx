@@ -4,6 +4,7 @@ interface SearchProps {
   onSearch: (term: string) => void;
   isLoading: boolean;
   initialValue: string;
+  hasError: boolean
 }
 
 interface SearchState {
@@ -32,7 +33,7 @@ class Search extends Component<SearchProps, SearchState> {
 
   handleSearchClick = () => {
     const trimmedTerm = this.state.inputValue.trim();
-    if (trimmedTerm === this.props.initialValue) return;
+    if (trimmedTerm === this.props.initialValue && !this.props.hasError) return;
 
     localStorage.setItem(searchStorageKey, trimmedTerm);
     this.props.onSearch(trimmedTerm);

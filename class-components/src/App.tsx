@@ -17,6 +17,7 @@ interface State {
   apiResponse: ApiResponse | undefined;
   loading: boolean;
   searchTerm: string;
+  searchCount: number;
 }
 
 class App extends Component<AppProps, State> {
@@ -30,6 +31,7 @@ class App extends Component<AppProps, State> {
       apiResponse: undefined,
       loading: false,
       searchTerm: savedTerm,
+      searchCount: 0,
     };
   }
 
@@ -63,6 +65,7 @@ class App extends Component<AppProps, State> {
             loading: false,
             hasError: false,
             searchTerm: searchInput ?? prev.searchTerm,
+            searchCount: prev.searchCount + 1,
           }));
         } catch (error) {
           console.error('API Error:', error);
@@ -83,6 +86,7 @@ class App extends Component<AppProps, State> {
             onSearch={this.handleSearch}
             isLoading={this.state.loading}
             initialValue={this.state.searchTerm}
+            hasError={this.state.hasError}
           />
         </section>
 
@@ -93,7 +97,7 @@ class App extends Component<AppProps, State> {
               onPageChange={(page: number) => this.callApi(page)}
             />
           )}
-          <ErrorBoundary>
+          <ErrorBoundary key={this.state.searchCount}>
             <Loader isLoading={this.state.loading} />
             <Results
               hasError={this.state.hasError}
