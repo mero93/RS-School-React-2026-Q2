@@ -1,27 +1,36 @@
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
+import mockComics from './__tests__/comics.json';
 
 vi.mock('./services/ApiService', () => {
   return {
     ApiService: {
-      search: vi.fn().mockResolvedValue({
-        items: [
-          {
-            uid: '1',
-            title: 'Mock Comic 1',
-            publishedYearFrom: 2020,
-            publishedYearTo: 2021,
-            numberOfPages: 32,
-          },
-        ],
-        page: {
-          pageNumber: 0,
-          pageSize: 10,
-          numberOfElements: 1,
-          totalElements: 1,
-          totalPages: 1,
-        },
-      }),
+      search: vi
+        .fn()
+        .mockImplementation(
+          async (title = '', pageNumber = 0, pageSize = 10) => {
+            const filtered = mockComics.filter((item) =>
+              item.title.toLowerCase().includes(title.toLowerCase())
+            );
+
+            const totalElements = filtered.length;
+            const totalPages = Math.ceil(totalElements / pageSize);
+            const start = pageNumber * pageSize;
+            const end = start + pageSize;
+            const pagedItems = filtered.slice(start, end);
+
+            return {
+              comicStrips: pagedItems,
+              page: {
+                pageNumber,
+                pageSize,
+                numberOfElements: pagedItems.length,
+                totalElements,
+                totalPages,
+              },
+            };
+          }
+        ),
     },
   };
 });
@@ -42,4 +51,4 @@ const localStorageMock = (() => {
   };
 })();
 
-Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+Object.defineProperty(globalThis, 'localStorage', { value: localStorageMock });
