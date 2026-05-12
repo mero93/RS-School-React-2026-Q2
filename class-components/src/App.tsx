@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import './App.css';
-import ErrorBoundary from './components/ErrorBoundary';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import Results from './components/Result/Results';
 import type { ApiResponse } from './types/api-response';
 import { ApiService } from './services/api.service';
