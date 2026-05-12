@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 import mockComics from './__tests__/comics.json';
 
-vi.mock('./services/ApiService', () => {
+vi.mock('./services/api.service', () => {
   return {
     ApiService: {
       search: vi

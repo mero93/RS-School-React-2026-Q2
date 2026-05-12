@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { ApiService } from './api.service';
 
+vi.unmock('./api.service');
+
 describe('ApiService', () => {
   beforeEach(() => {
     vi.stubGlobal('fetch', vi.fn());
