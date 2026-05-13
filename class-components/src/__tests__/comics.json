@@ -1,0 +1,352 @@
+[
+  {
+    "uid": "AS-1",
+    "title": "The Menagerie Part I",
+    "publishedYearFrom": 1966,
+    "publishedYearTo": 1966,
+    "numberOfPages": 22
+  },
+  {
+    "uid": "AS-2",
+    "title": "The Menagerie Part II",
+    "publishedYearFrom": 1966,
+    "publishedYearTo": 1966,
+    "numberOfPages": 22
+  },
+  {
+    "uid": "AS-3",
+    "title": "Balance of Terror",
+    "publishedYearFrom": 1966,
+    "publishedYearTo": 1967,
+    "numberOfPages": 24
+  },
+  {
+    "uid": "AS-4",
+    "title": "Space Seed",
+    "publishedYearFrom": 1967,
+    "publishedYearTo": 1967,
+    "numberOfPages": 30
+  },
+  {
+    "uid": "AS-5",
+    "title": "The City on the Edge of Forever",
+    "publishedYearFrom": 1967,
+    "publishedYearTo": null,
+    "numberOfPages": 45
+  },
+  {
+    "uid": "AS-6",
+    "title": "Mirror, Mirror",
+    "publishedYearFrom": 1967,
+    "publishedYearTo": 1968,
+    "numberOfPages": 28
+  },
+  {
+    "uid": "AS-7",
+    "title": "The Doomsday Machine",
+    "publishedYearFrom": 1967,
+    "publishedYearTo": 1967,
+    "numberOfPages": 32
+  },
+  {
+    "uid": "AS-8",
+    "title": "Amok Time",
+    "publishedYearFrom": 1967,
+    "publishedYearTo": 1967,
+    "numberOfPages": null
+  },
+  {
+    "uid": "AS-9",
+    "title": "The Trouble with Tribbles",
+    "publishedYearFrom": 1968,
+    "publishedYearTo": 1968,
+    "numberOfPages": 36
+  },
+  {
+    "uid": "AS-10",
+    "title": "Journey to Babel",
+    "publishedYearFrom": 1968,
+    "publishedYearTo": 1968,
+    "numberOfPages": 24
+  },
+  {
+    "uid": "AS-11",
+    "title": "The Ultimate Computer",
+    "publishedYearFrom": 1968,
+    "publishedYearTo": 1968,
+    "numberOfPages": 22
+  },
+  {
+    "uid": "AS-12",
+    "title": "The Enterprise Incident",
+    "publishedYearFrom": 1968,
+    "publishedYearTo": 1968,
+    "numberOfPages": 20
+  },
+  {
+    "uid": "AS-13",
+    "title": "The Tholian Web",
+    "publishedYearFrom": 1968,
+    "publishedYearTo": 1969,
+    "numberOfPages": 25
+  },
+  {
+    "uid": "AS-14",
+    "title": "Day of the Dove",
+    "publishedYearFrom": 1969,
+    "publishedYearTo": 1969,
+    "numberOfPages": 22
+  },
+  {
+    "uid": "AS-15",
+    "title": "The Cloud Minders",
+    "publishedYearFrom": 1969,
+    "publishedYearTo": 1969,
+    "numberOfPages": 30
+  },
+  {
+    "uid": "AS-16",
+    "title": "All Our Yesterdays",
+    "publishedYearFrom": 1969,
+    "publishedYearTo": null,
+    "numberOfPages": 32
+  },
+  {
+    "uid": "AS-17",
+    "title": "Turnabout Intruder",
+    "publishedYearFrom": 1969,
+    "publishedYearTo": 1970,
+    "numberOfPages": 28
+  },
+  {
+    "uid": "AS-18",
+    "title": "The Naked Time",
+    "publishedYearFrom": 1970,
+    "publishedYearTo": 1970,
+    "numberOfPages": 24
+  },
+  {
+    "uid": "AS-19",
+    "title": "The Squire of Gothos",
+    "publishedYearFrom": 1971,
+    "publishedYearTo": 1971,
+    "numberOfPages": 34
+  },
+  {
+    "uid": "AS-20",
+    "title": "The Devil in the Dark",
+    "publishedYearFrom": 1972,
+    "publishedYearTo": 1972,
+    "numberOfPages": 22
+  },
+  {
+    "uid": "AS-21",
+    "title": "Encounter at Farpoint",
+    "publishedYearFrom": 1987,
+    "publishedYearTo": 1987,
+    "numberOfPages": 64
+  },
+  {
+    "uid": "AS-22",
+    "title": "The Naked Now",
+    "publishedYearFrom": 1987,
+    "publishedYearTo": 1987,
+    "numberOfPages": 22
+  },
+  {
+    "uid": "AS-23",
+    "title": "Where No One Has Gone Before",
+    "publishedYearFrom": 1987,
+    "publishedYearTo": 1988,
+    "numberOfPages": 25
+  },
+  {
+    "uid": "AS-24",
+    "title": "The Big Goodbye",
+    "publishedYearFrom": 1988,
+    "publishedYearTo": 1988,
+    "numberOfPages": 30
+  },
+  {
+    "uid": "AS-25",
+    "title": "Datalore",
+    "publishedYearFrom": 1988,
+    "publishedYearTo": 1988,
+    "numberOfPages": 28
+  },
+  {
+    "uid": "AS-26",
+    "title": "Heart of Glory",
+    "publishedYearFrom": 1988,
+    "publishedYearTo": 1988,
+    "numberOfPages": 22
+  },
+  {
+    "uid": "AS-27",
+    "title": "The Arsenal of Freedom",
+    "publishedYearFrom": 1988,
+    "publishedYearTo": 1988,
+    "numberOfPages": 24
+  },
+  {
+    "uid": "AS-28",
+    "title": "Conspiracy",
+    "publishedYearFrom": 1988,
+    "publishedYearTo": 1988,
+    "numberOfPages": 32
+  },
+  {
+    "uid": "AS-29",
+    "title": "The Child",
+    "publishedYearFrom": 1988,
+    "publishedYearTo": 1989,
+    "numberOfPages": 22
+  },
+  {
+    "uid": "AS-30",
+    "title": "Elementary, Dear Data",
+    "publishedYearFrom": 1989,
+    "publishedYearTo": 1989,
+    "numberOfPages": 26
+  },
+  {
+    "uid": "AS-31",
+    "title": "A Matter of Honor",
+    "publishedYearFrom": 1989,
+    "publishedYearTo": 1989,
+    "numberOfPages": 22
+  },
+  {
+    "uid": "AS-32",
+    "title": "The Measure of a Man",
+    "publishedYearFrom": 1989,
+    "publishedYearTo": 1989,
+    "numberOfPages": 30
+  },
+  {
+    "uid": "AS-33",
+    "title": "Q Who",
+    "publishedYearFrom": 1989,
+    "publishedYearTo": 1989,
+    "numberOfPages": 35
+  },
+  {
+    "uid": "AS-34",
+    "title": "The Emissary",
+    "publishedYearFrom": 1989,
+    "publishedYearTo": 1989,
+    "numberOfPages": 24
+  },
+  {
+    "uid": "AS-35",
+    "title": "The Survivors",
+    "publishedYearFrom": 1989,
+    "publishedYearTo": 1990,
+    "numberOfPages": 28
+  },
+  {
+    "uid": "AS-36",
+    "title": "Yesterday's Enterprise",
+    "publishedYearFrom": 1990,
+    "publishedYearTo": 1990,
+    "numberOfPages": 40
+  },
+  {
+    "uid": "AS-37",
+    "title": "The Offspring",
+    "publishedYearFrom": 1990,
+    "publishedYearTo": 1990,
+    "numberOfPages": 24
+  },
+  {
+    "uid": "AS-38",
+    "title": "Sins of the Father",
+    "publishedYearFrom": 1990,
+    "publishedYearTo": 1990,
+    "numberOfPages": 22
+  },
+  {
+    "uid": "AS-39",
+    "title": "The Best of Both Worlds",
+    "publishedYearFrom": 1990,
+    "publishedYearTo": 1990,
+    "numberOfPages": 60
+  },
+  {
+    "uid": "AS-40",
+    "title": "Family",
+    "publishedYearFrom": 1990,
+    "publishedYearTo": 1991,
+    "numberOfPages": 22
+  },
+  {
+    "uid": "AS-41",
+    "title": "Reunion",
+    "publishedYearFrom": 1991,
+    "publishedYearTo": 1991,
+    "numberOfPages": 26
+  },
+  {
+    "uid": "AS-42",
+    "title": "Data's Day",
+    "publishedYearFrom": 1991,
+    "publishedYearTo": 1991,
+    "numberOfPages": 24
+  },
+  {
+    "uid": "AS-43",
+    "title": "The Wounded",
+    "publishedYearFrom": 1991,
+    "publishedYearTo": 1991,
+    "numberOfPages": 22
+  },
+  {
+    "uid": "AS-44",
+    "title": "Clues",
+    "publishedYearFrom": 1991,
+    "publishedYearTo": 1991,
+    "numberOfPages": 20
+  },
+  {
+    "uid": "AS-45",
+    "title": "The Drumhead",
+    "publishedYearFrom": 1991,
+    "publishedYearTo": 1991,
+    "numberOfPages": 28
+  },
+  {
+    "uid": "AS-46",
+    "title": "The Inner Light",
+    "publishedYearFrom": 1992,
+    "publishedYearTo": 1992,
+    "numberOfPages": 32
+  },
+  {
+    "uid": "AS-47",
+    "title": "Chain of Command",
+    "publishedYearFrom": 1992,
+    "publishedYearTo": 1993,
+    "numberOfPages": 48
+  },
+  {
+    "uid": "AS-48",
+    "title": "Tapestry",
+    "publishedYearFrom": 1993,
+    "publishedYearTo": 1993,
+    "numberOfPages": 24
+  },
+  {
+    "uid": "AS-49",
+    "title": "The Chase",
+    "publishedYearFrom": 1993,
+    "publishedYearTo": 1993,
+    "numberOfPages": 22
+  },
+  {
+    "uid": "AS-50",
+    "title": "All Good Things...",
+    "publishedYearFrom": 1994,
+    "publishedYearTo": null,
+    "numberOfPages": 80
+  }
+]
