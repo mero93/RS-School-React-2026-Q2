@@ -78,9 +78,7 @@ export default function ItemDetails() {
         </button>
       </div>
 
-      <div className="details-content">
-        <Loader isLoading={loading} />
-        
+      <div className="details-content">        
         {error && <p className="details-status error">{error}</p>}
 
         {!loading && !error && comic && (
