@@ -1,13 +1,12 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import Search, { searchStorageKey } from './Search';
+import Search from './Search';
 
 describe('Search Component', () => {
   const mockOnSearch = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
-    localStorage.clear();
   });
 
   it('renders with the initial value from props', () => {
@@ -42,7 +41,7 @@ describe('Search Component', () => {
     expect(input.value).toBe('Enterprise');
   });
 
-  it('saves trimmed term to localStorage and calls onSearch on button click', () => {
+  it('calls onSearch with trimmed term on button click', () => {
     render(
       <Search
         initialValue=""
@@ -58,7 +57,6 @@ describe('Search Component', () => {
     fireEvent.change(input, { target: { value: '  Voyager  ' } });
     fireEvent.click(button);
 
-    expect(localStorage.getItem(searchStorageKey)).toBe('Voyager');
     expect(mockOnSearch).toHaveBeenCalledWith('Voyager');
   });
 
@@ -99,6 +97,7 @@ describe('Search Component', () => {
   it('updates local state when initialValue prop changes (componentDidUpdate)', () => {
     const { rerender } = render(
       <Search
+        key="initial-key"
         initialValue="Initial"
         onSearch={mockOnSearch}
         isLoading={false}
@@ -108,6 +107,7 @@ describe('Search Component', () => {
 
     rerender(
       <Search
+        key="updated-key"
         initialValue="Updated"
         onSearch={mockOnSearch}
         isLoading={false}

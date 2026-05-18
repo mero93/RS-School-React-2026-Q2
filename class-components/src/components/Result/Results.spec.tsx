@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
+import { MemoryRouter } from 'react-router-dom';
 import Results from './Results';
 import type { ComicStrip } from '../../types/comic-strip';
 
@@ -9,8 +10,12 @@ describe('Results Component', () => {
     { uid: '2', title: 'Comic Two', publishedYearFrom: 2021 },
   ];
 
+  const renderWithRouter = (ui: React.ReactElement) => {
+    return render(<MemoryRouter>{ui}</MemoryRouter>);
+  };
+
   it('renders the correct number of ItemCard components', () => {
-    render(<Results items={mockItems} hasError={false} />);
+    renderWithRouter(<Results items={mockItems} hasError={false} />);
 
     expect(screen.getByText('Comic One')).toBeInTheDocument();
     expect(screen.getByText('Comic Two')).toBeInTheDocument();
@@ -21,14 +26,14 @@ describe('Results Component', () => {
   });
 
   it('renders the empty state message when items array is empty', () => {
-    render(<Results items={[]} hasError={false} />);
+    renderWithRouter(<Results items={[]} hasError={false} />);
 
     expect(screen.getByText(/no results found/i)).toBeInTheDocument();
     expect(screen.queryByText('Comic One')).not.toBeInTheDocument();
   });
 
   it('renders the empty state message when items is undefined', () => {
-    render(<Results items={undefined} hasError={false} />);
+    renderWithRouter(<Results items={undefined} hasError={false} />);
 
     expect(screen.getByText(/no results found/i)).toBeInTheDocument();
   });
@@ -37,7 +42,7 @@ describe('Results Component', () => {
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     expect(() => {
-      render(<Results items={mockItems} hasError={true} />);
+      renderWithRouter(<Results items={mockItems} hasError={true} />);
     }).toThrow('Simulation: Results component crashed!');
 
     spy.mockRestore();
