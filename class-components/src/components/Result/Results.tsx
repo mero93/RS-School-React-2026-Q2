@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import type { ComicStrip } from '../../types/comic-strip';
 import ItemCard from '../ItemCard/ItemCard';
 import './Results.css';
