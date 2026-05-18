@@ -1,5 +1,6 @@
 .item-card {
   width: 280px;
+  cursor: pointer;
   background-color: #fff;
   border-radius: 12px;
   padding: 20px;
