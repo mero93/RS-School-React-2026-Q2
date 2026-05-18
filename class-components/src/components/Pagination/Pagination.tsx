@@ -1,4 +1,3 @@
-// src/components/Pagination/Pagination.tsx
 import type { PageData } from '../../types/api-response';
 import './Pagination.css';
 
@@ -12,7 +11,7 @@ export default function Pagination(props: Readonly<PaginationProps>) {
   const { pageNumber, totalPages } = page;
   const currentPage = pageNumber + 1;
 
-  if (totalPages <= 1) return null;
+    if (totalPages <= 1) return null;
 
   return (
     <div className="pagination-container">
