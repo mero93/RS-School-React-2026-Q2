@@ -6,7 +6,7 @@ interface CardProps {
   item: ComicStrip;
 }
 
-const ItemCard = ({ item }: CardProps) => {
+export default function ItemCard({ item }: Readonly<CardProps>) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handleCardClick = () => {
@@ -37,4 +37,3 @@ const ItemCard = ({ item }: CardProps) => {
   );
 };
 
-export default ItemCard;
