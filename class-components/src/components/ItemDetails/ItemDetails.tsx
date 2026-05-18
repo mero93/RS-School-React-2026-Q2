@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import type { ComicStrip } from '../../types/comic-strip';
-import Loader from '../Loader/Loader';
 import './ItemDetails.css';
 
 interface SingleApiResponse {

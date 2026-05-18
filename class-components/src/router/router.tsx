@@ -1,28 +1,34 @@
 import { createBrowserRouter } from 'react-router-dom';
+import ItemDetails from '../components/ItemDetails/ItemDetails';
 import About from '../pages/About/About';
 import Home from '../pages/Home/Home';
 import NotFound from '../pages/NotFound/NotFound';
-import ItemDetails from '../components/ItemDetails/ItemDetails';
+import RootLayout from '../RootLayout';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home />,
+    element: <RootLayout />,
     errorElement: <NotFound />,
     children: [
       {
         path: '',
-        element: <ItemDetails />,
-        errorElement: <NotFound />,
+        element: <Home />, 
+        children: [
+          {
+            path: '',
+            element: <ItemDetails />,
+          },
+        ],
+      },
+      {
+        path: 'about',
+        element: <About />,
+      },
+      {
+        path: '*',
+        element: <NotFound />,
       },
     ],
-  },
-  {
-    path: 'about',
-    element: <About />,
-  },
-  {
-    path: '*',
-    element: <NotFound />,
   },
 ]);
