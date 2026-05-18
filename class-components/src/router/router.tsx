@@ -12,13 +12,8 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '',
-        children: [
-          {
-            path: 'details',
-            element: <ItemDetails />,
-            errorElement: <NotFound />,
-          },
-        ],
+        element: <ItemDetails />,
+        errorElement: <NotFound />,
       },
     ],
   },
