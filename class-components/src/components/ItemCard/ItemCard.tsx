@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import type { ComicStrip } from '../../types/comic-strip';
 import './ItemCard.css';
 
@@ -6,23 +6,34 @@ interface CardProps {
   item: ComicStrip;
 }
 
-class ItemCard extends Component<CardProps> {
-  render() {
-    const { item } = this.props;
+export default function ItemCard({ item }: Readonly<CardProps>) {
+  const [searchParams, setSearchParams] = useSearchParams();
 
-    const dateRange = `Published: ${item.publishedYearFrom || 'N/A'} - ${
-      item.publishedYearTo || 'Present'
-    }`;
-    const pages = item.numberOfPages ? ` | Pages: ${item.numberOfPages}` : '';
-    const description = `${dateRange}${pages}`;
+  const handleCardClick = () => {
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.set('details', item.uid);
+    setSearchParams(nextParams);
+  };
 
-    return (
-      <div className="item-card">
-        <h3 className="item-card-title">{item.title}</h3>
-        <p className="item-card-text">{description}</p>
-      </div>
-    );
-  }
-}
+  const dateRange = `Published: ${item.publishedYearFrom || 'N/A'} - ${
+    item.publishedYearTo || 'Present'
+  }`;
+  const pages = item.numberOfPages ? ` | Pages: ${item.numberOfPages}` : '';
+  const description = `${dateRange}${pages}`;
 
-export default ItemCard;
+  return (
+    <div
+      className="item-card"
+      onClick={handleCardClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') handleCardClick();
+      }}
+    >
+      <h3 className="item-card-title">{item.title}</h3>
+      <p className="item-card-text">{description}</p>
+    </div>
+  );
+};
+

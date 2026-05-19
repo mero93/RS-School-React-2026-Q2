@@ -1,4 +1,5 @@
 import type { ApiResponse } from '../types/api-response';
+import type { ComicStrip } from '../types/comic-strip';
 
 const BASE_URL = 'https://stapi.co/api/v1/rest';
 
@@ -28,5 +29,21 @@ export const ApiService = {
     }
 
     return response.json();
+  },
+
+  async getOne(uid: string): Promise<ComicStrip> {
+    const response = await fetch(`${BASE_URL}/comicStrip?uid=${uid}`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`API Single Fetch Error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.comicStrip;
   },
 };
