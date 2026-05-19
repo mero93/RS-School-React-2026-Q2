@@ -68,4 +68,40 @@ describe('ApiService', () => {
 
     await expect(ApiService.search('test')).rejects.toThrow('Network string');
   });
+
+  it('should fetch a single comic strip by uid successfully', async () => {
+    const fetchMock = fetch as Mock;
+    const mockComic = { uid: 'COMIC123', title: 'The Next Generation' };
+
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => ({ comicStrip: mockComic }),
+    });
+
+    const result = await ApiService.getOne('COMIC123');
+
+    expect(fetch).toHaveBeenCalledWith(
+      'https://stapi.co/api/v1/rest/comicStrip?uid=COMIC123',
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      }
+    );
+    expect(result).toEqual(mockComic);
+  });
+
+  it('should throw an error when getOne response is not ok', async () => {
+    const fetchMock = fetch as Mock;
+
+    fetchMock.mockResolvedValue({
+      ok: false,
+      statusText: 'Internal Server Error',
+    });
+
+    await expect(ApiService.getOne('BAD_UID')).rejects.toThrow(
+      'API Single Fetch Error: Internal Server Error'
+    );
+  });
 });

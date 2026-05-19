@@ -1,4 +1,10 @@
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitFor,
+  fireEvent,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import ItemDetails from './ItemDetails';
@@ -124,5 +130,72 @@ describe('ItemDetails Component', () => {
     expect(
       screen.queryByText('The Next Generation: The Space Between')
     ).not.toBeInTheDocument();
+  });
+
+  it('formats dates correctly when day or month fields are omitted', async () => {
+    const incompleteDatesComic = {
+      comicStrip: {
+        uid: 'COMIC111',
+        title: 'Partial Dates Comic',
+        publishedYearFrom: 1995,
+        publishedYearTo: 2000,
+        publishedMonthTo: 5,
+      },
+    };
+
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => incompleteDatesComic,
+    } as Response);
+
+    render(
+      <MemoryRouter initialEntries={['/?details=COMIC111']}>
+        <ItemDetails />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('1995 - 5/2000')).toBeInTheDocument();
+    });
+  });
+
+  it('falls back to default labels when entire year arrays are missing from response objects', async () => {
+    const missingYearsComic = {
+      comicStrip: {
+        uid: 'COMIC222',
+        title: 'No Years Comic',
+      },
+    };
+
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => missingYearsComic,
+    } as Response);
+
+    render(
+      <MemoryRouter initialEntries={['/?details=COMIC222']}>
+        <ItemDetails />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('N/A - N/A')).toBeInTheDocument();
+    });
+  });
+
+  it('displays a fallback generic message when catch block intercepts a non-Error throw', async () => {
+    vi.spyOn(globalThis, 'fetch').mockImplementation(() => {
+      throw 'Raw string syntax error crash';
+    });
+
+    render(
+      <MemoryRouter initialEntries={['/?details=STRING_CRASH']}>
+        <ItemDetails />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('An error occurred')).toBeInTheDocument();
+    });
   });
 });
