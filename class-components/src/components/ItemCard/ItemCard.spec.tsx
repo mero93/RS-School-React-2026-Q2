@@ -1,10 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, useSearchParams } from 'react-router-dom';
 import ItemCard from './ItemCard';
 import type { ComicStrip } from '../../types/comic-strip';
 
-describe('ItemCard', () => {
+describe('ItemCard - Additional Interactivity Tests', () => {
   const mockItem: ComicStrip = {
     uid: '123',
     title: 'Star Trek: Mirror Universe',
@@ -13,51 +13,61 @@ describe('ItemCard', () => {
     numberOfPages: 32,
   };
 
-  const renderWithRouter = (ui: React.ReactElement) => {
-    return render(<MemoryRouter>{ui}</MemoryRouter>);
+  let capturedParams: URLSearchParams;
+
+  const ParamTracker = () => {
+    const [searchParams] = useSearchParams();
+    capturedParams = searchParams;
+    return null;
   };
 
-  it('renders the title correctly', () => {
-    renderWithRouter(<ItemCard item={mockItem} />);
-    expect(screen.getByText(mockItem.title)).toBeInTheDocument();
-  });
-
-  it('renders full date range and page count when all data is provided', () => {
-    renderWithRouter(<ItemCard item={mockItem} />);
-    expect(
-      screen.getByText(/Published: 1967 - 1968 | Pages: 32/i)
-    ).toBeInTheDocument();
-  });
-
-  it('displays "N/A" if publishedYearFrom is missing', () => {
-    const incompleteItem = { ...mockItem, publishedYearFrom: undefined };
-    renderWithRouter(
-      <ItemCard item={incompleteItem} />
+  const renderWithTracker = (
+    ui: React.ReactElement,
+    initialEntries = ['/']
+  ) => {
+    return render(
+      <MemoryRouter initialEntries={initialEntries}>
+        {ui}
+        <ParamTracker />
+      </MemoryRouter>
     );
+  };
 
-    expect(screen.getByText(/Published: N\/A - 1968/i)).toBeInTheDocument();
+  it('updates search parameters with the comic uid when clicked', () => {
+    renderWithTracker(<ItemCard item={mockItem} />);
+
+    const card = screen.getByRole('button');
+    fireEvent.click(card);
+
+    expect(capturedParams.get('details')).toBe('123');
   });
 
-  it('displays "Present" if publishedYearTo is missing', () => {
-    const currentItem = { ...mockItem, publishedYearTo: undefined };
-    renderWithRouter(<ItemCard item={currentItem} />);
+  it('updates search parameters when the Enter key is pressed', () => {
+    renderWithTracker(<ItemCard item={mockItem} />);
 
-    expect(screen.getByText(/Published: 1967 - Present/i)).toBeInTheDocument();
+    const card = screen.getByRole('button');
+    fireEvent.keyDown(card, { key: 'Enter', code: 'Enter' });
+
+    expect(capturedParams.get('details')).toBe('123');
   });
 
-  it('does not display page count section if numberOfPages is missing', () => {
-    const noPagesItem = { ...mockItem, numberOfPages: undefined };
-    renderWithRouter(<ItemCard item={noPagesItem} />);
+  it('does not update search parameters when other keys are pressed', () => {
+    renderWithTracker(<ItemCard item={mockItem} />);
 
-    const description = screen.getByText(/Published: 1967 - 1968/i);
-    expect(description.textContent).not.toContain('| Pages:');
+    const card = screen.getByRole('button');
+    fireEvent.keyDown(card, { key: 'Space', code: 'Space' });
+
+    expect(capturedParams.get('details')).toBeNull();
   });
 
-  it('renders with only necessary data', () => {
-    const minimalItem = { uid: '0', title: 'Empty Comic' };
-    renderWithRouter(<ItemCard item={minimalItem} />);
+  it('preserves existing search parameters when updating the details ID', () => {
+    renderWithTracker(<ItemCard item={mockItem} />, ['/?search=Spock&page=2']);
 
-    expect(screen.getByText('Empty Comic')).toBeInTheDocument();
-    expect(screen.getByText(/Published: N\/A - Present/i)).toBeInTheDocument();
+    const card = screen.getByRole('button');
+    fireEvent.click(card);
+
+    expect(capturedParams.get('search')).toBe('Spock');
+    expect(capturedParams.get('page')).toBe('2');
+    expect(capturedParams.get('details')).toBe('123');
   });
 });
