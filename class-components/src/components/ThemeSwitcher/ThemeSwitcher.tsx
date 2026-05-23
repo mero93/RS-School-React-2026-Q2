@@ -21,7 +21,7 @@ export default function ThemeSwitcher() {
   };
 
   return (
-    <button onClick={handleClick}>
+    <button onClick={handleClick} className="theme-button">
       {theme === 'light' ? <LucideSun /> : <LucideMoonStar />}
     </button>
   );

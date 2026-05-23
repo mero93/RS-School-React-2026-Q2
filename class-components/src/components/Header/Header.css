@@ -29,6 +29,9 @@
   color: var(--text-h);
   background-color: var(--accent-bg);
   border-color: var(--accent-border);
+}
+
+.nav-link.active.no-click {
   cursor: default;
   pointer-events: none;
 }
