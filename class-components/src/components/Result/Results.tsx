@@ -1,3 +1,4 @@
+import { useCheckItemStore } from '../../store/check-item.store';
 import type { ComicStrip } from '../../types/comic-strip';
 import ItemCard from '../ItemCard/ItemCard';
 import './Results.css';
@@ -8,6 +9,8 @@ interface ResultsProps {
 }
 
 export default function Results(props: Readonly<ResultsProps>) {
+  const { selectedItems, toggleItem } = useCheckItemStore();
+
   if (props.hasError) {
     throw new Error('Simulation: Results component crashed!');
   }
@@ -24,7 +27,20 @@ export default function Results(props: Readonly<ResultsProps>) {
             No results found. Try a different search term.
           </p>
         ) : (
-          items.map((item) => <ItemCard key={item.uid} item={item} />)
+          items.map((item) => {
+            const isSelected = selectedItems.some((i) => i.uid === item.uid);
+            return (
+              <ItemCard
+                key={item.uid}
+                item={item}
+                toggleCard={(event: React.MouseEvent) => {
+                  event.stopPropagation();
+                  toggleItem(item);
+                }}
+                isSelected={isSelected}
+              />
+            );
+          })
         )}
       </div>
     </div>
