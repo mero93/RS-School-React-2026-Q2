@@ -1,9 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import {
-  useSearchLocalStorage,
-  SEARCH_STORAGE_KEY,
-} from './use-local-storage';
+import { useSearchLocalStorage, SEARCH_STORAGE_KEY } from './use-local-storage';
 
 describe('useSearchLocalStorage Hook', () => {
   beforeEach(() => {

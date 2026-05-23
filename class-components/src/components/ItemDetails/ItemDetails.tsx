@@ -9,7 +9,7 @@ interface SingleApiResponse {
 
 export default function ItemDetails() {
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   const [comic, setComic] = useState<ComicStrip | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +28,7 @@ export default function ItemDetails() {
         const response = await fetch(
           `https://stapi.co/api/v1/rest/comicStrip?uid=${detailId}`
         );
-        
+
         if (!response.ok) {
           throw new Error('Failed to fetch comic details');
         }
@@ -59,9 +59,20 @@ export default function ItemDetails() {
 
   if (!detailId) return null;
 
-  const dateFrom = formatDate(comic?.publishedYearFrom, comic?.publishedMonthFrom, comic?.publishedDayFrom);
-  const dateTo = formatDate(comic?.publishedYearTo, comic?.publishedMonthTo, comic?.publishedDayTo);
-  const dateRange = dateFrom || dateTo ? `${dateFrom || 'N/A'} - ${dateTo || 'Present'}` : 'N/A';
+  const dateFrom = formatDate(
+    comic?.publishedYearFrom,
+    comic?.publishedMonthFrom,
+    comic?.publishedDayFrom
+  );
+  const dateTo = formatDate(
+    comic?.publishedYearTo,
+    comic?.publishedMonthTo,
+    comic?.publishedDayTo
+  );
+  const dateRange =
+    dateFrom || dateTo
+      ? `${dateFrom || 'N/A'} - ${dateTo || 'Present'}`
+      : 'N/A';
 
   return (
     <div className="details-panel">
@@ -77,16 +88,20 @@ export default function ItemDetails() {
         </button>
       </div>
 
-      <div className="details-content">        
+      <div className="details-content">
         {error && <p className="details-status error">{error}</p>}
 
         {!loading && !error && comic && (
           <div className="comic-info">
             <h3 className="comic-title">{comic.title}</h3>
             <div className="meta-group">
-              <p><strong>Published Range:</strong> {dateRange}</p>
+              <p>
+                <strong>Published Range:</strong> {dateRange}
+              </p>
               {!!comic.numberOfPages && (
-                <p><strong>Length:</strong> {comic.numberOfPages} Pages</p>
+                <p>
+                  <strong>Length:</strong> {comic.numberOfPages} Pages
+                </p>
               )}
             </div>
             <div className="uid-badge">

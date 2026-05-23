@@ -37,7 +37,6 @@ describe('Header Component', () => {
   });
 
   it('renders Home as a link if there are search params on the home root path', () => {
-
     render(
       <MemoryRouter initialEntries={['/?search=test']}>
         <Header />

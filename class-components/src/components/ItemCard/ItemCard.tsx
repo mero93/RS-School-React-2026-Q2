@@ -35,5 +35,4 @@ export default function ItemCard({ item }: Readonly<CardProps>) {
       <p className="item-card-text">{description}</p>
     </div>
   );
-};
-
+}
