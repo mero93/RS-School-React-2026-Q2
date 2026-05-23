@@ -9,6 +9,7 @@ import Pagination from '../../components/Pagination/Pagination';
 import Results from '../../components/Result/Results';
 import Loader from '../../components/Loader/Loader';
 import { ApiService } from '../../services/api.service';
+import CheckItemsFlyout from '../../components/CheckItemsFlyout/CheckItemsFlyout';
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -32,8 +33,8 @@ export default function Home() {
 
   useEffect(() => {
     if (!searchParams.has('search') && currentSearch) {
-      const nextParams = new URLSearchParams(searchParams)
-      nextParams.set('search', currentSearch)
+      const nextParams = new URLSearchParams(searchParams);
+      nextParams.set('search', currentSearch);
       setSearchParams(nextParams, { replace: true });
     }
 
@@ -95,8 +96,8 @@ export default function Home() {
           hasError={!!error}
         />
       </header>
-
-      <main className={`main-layout ${detailId ? 'has-details' : ''}`}>
+      <CheckItemsFlyout />
+      <div className={`main-layout ${detailId ? 'has-details' : ''}`}>
         <section className="master-panel">
           {error && <p className="status-msg error">{error}</p>}
           {loading && <p className="status-msg">Loading records...</p>}
@@ -113,7 +114,7 @@ export default function Home() {
         <section className="outlet-panel">
           <Outlet />
         </section>
-      </main>
+      </div>
     </div>
   );
 }
