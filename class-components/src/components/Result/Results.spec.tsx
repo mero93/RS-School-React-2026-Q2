@@ -1,8 +1,18 @@
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
-import { MemoryRouter } from 'react-router-dom';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { MemoryRouter, useSearchParams } from 'react-router-dom';
 import Results from './Results';
 import type { ComicStrip } from '../../types/comic-strip';
+
+let mockSelectedItems: ComicStrip[] = [];
+const mockToggleItem = vi.fn();
+
+vi.mock('../../store/check-item.store', () => ({
+  useCheckItemStore: () => ({
+    selectedItems: mockSelectedItems,
+    toggleItem: mockToggleItem,
+  }),
+}));
 
 describe('Results Component', () => {
   const mockItems: ComicStrip[] = [
@@ -10,8 +20,25 @@ describe('Results Component', () => {
     { uid: '2', title: 'Comic Two', publishedYearFrom: 2021 },
   ];
 
-  const renderWithRouter = (ui: React.ReactElement) => {
-    return render(<MemoryRouter>{ui}</MemoryRouter>);
+  let capturedParams: URLSearchParams;
+  const ParamTracker = () => {
+    const [searchParams] = useSearchParams();
+    capturedParams = searchParams;
+    return null;
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockSelectedItems = [];
+  });
+
+  const renderWithRouter = (ui: React.ReactElement, initialEntries = ['/']) => {
+    return render(
+      <MemoryRouter initialEntries={initialEntries}>
+        {ui}
+        <ParamTracker />
+      </MemoryRouter>
+    );
   };
 
   it('renders the correct number of ItemCard components', () => {
@@ -23,6 +50,21 @@ describe('Results Component', () => {
     expect(
       screen.getByRole('heading', { name: /results area/i })
     ).toBeInTheDocument();
+  });
+
+  it('updates URL search parameters with the correct uid when an item card is clicked', () => {
+    const { container } = renderWithRouter(
+      <Results items={mockItems} hasError={false} />,
+      ['/?page=2']
+    );
+
+    const cards = container.querySelectorAll('.item-card');
+    if (!cards.length) throw new Error('No item cards found');
+
+    fireEvent.click(cards[0]);
+
+    expect(capturedParams.get('page')).toBe('2');
+    expect(capturedParams.get('details')).toBe('1');
   });
 
   it('renders the empty state message when items array is empty', () => {

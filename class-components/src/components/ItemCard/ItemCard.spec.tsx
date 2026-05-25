@@ -1,10 +1,9 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
-import { MemoryRouter, useSearchParams } from 'react-router-dom';
+import { render, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 import ItemCard from './ItemCard';
 import type { ComicStrip } from '../../types/comic-strip';
 
-describe('ItemCard - Additional Interactivity Tests', () => {
+describe('ItemCard - Unit Tests', () => {
   const mockItem: ComicStrip = {
     uid: '123',
     title: 'Star Trek: Mirror Universe',
@@ -13,61 +12,96 @@ describe('ItemCard - Additional Interactivity Tests', () => {
     numberOfPages: 32,
   };
 
-  let capturedParams: URLSearchParams;
-
-  const ParamTracker = () => {
-    const [searchParams] = useSearchParams();
-    capturedParams = searchParams;
-    return null;
-  };
-
-  const renderWithTracker = (
-    ui: React.ReactElement,
-    initialEntries = ['/']
-  ) => {
-    return render(
-      <MemoryRouter initialEntries={initialEntries}>
-        {ui}
-        <ParamTracker />
-      </MemoryRouter>
+  it('calls openCard with the correct uid when clicked', () => {
+    const mockOpenCard = vi.fn();
+    const { container } = render(
+      <ItemCard 
+        item={mockItem} 
+        toggleCard={vi.fn()} 
+        isSelected={false} 
+        openCard={mockOpenCard} 
+      />
     );
-  };
 
-  it('updates search parameters with the comic uid when clicked', () => {
-    renderWithTracker(<ItemCard item={mockItem} />);
+    const card = container.querySelector('.item-card');
+    if (!card) throw new Error('Could not find element with class .item-card');
 
-    const card = screen.getByRole('button');
     fireEvent.click(card);
 
-    expect(capturedParams.get('details')).toBe('123');
+    expect(mockOpenCard).toHaveBeenCalledTimes(1);
+    expect(mockOpenCard).toHaveBeenCalledWith('123');
   });
 
-  it('updates search parameters when the Enter key is pressed', () => {
-    renderWithTracker(<ItemCard item={mockItem} />);
+  it('calls openCard when the Enter key is pressed', () => {
+    const mockOpenCard = vi.fn();
+    const { container } = render(
+      <ItemCard 
+        item={mockItem} 
+        toggleCard={vi.fn()} 
+        isSelected={false} 
+        openCard={mockOpenCard} 
+      />
+    );
 
-    const card = screen.getByRole('button');
+    const card = container.querySelector('.item-card');
+    if (!card) throw new Error('Could not find element with class .item-card');
+
     fireEvent.keyDown(card, { key: 'Enter', code: 'Enter' });
 
-    expect(capturedParams.get('details')).toBe('123');
+    expect(mockOpenCard).toHaveBeenCalledTimes(1);
+    expect(mockOpenCard).toHaveBeenCalledWith('123');
   });
 
-  it('does not update search parameters when other keys are pressed', () => {
-    renderWithTracker(<ItemCard item={mockItem} />);
+  it('does not call openCard when other keys are pressed', () => {
+    const mockOpenCard = vi.fn();
+    const { container } = render(
+      <ItemCard 
+        item={mockItem} 
+        toggleCard={vi.fn()} 
+        isSelected={false} 
+        openCard={mockOpenCard} 
+      />
+    );
 
-    const card = screen.getByRole('button');
+    const card = container.querySelector('.item-card');
+    if (!card) throw new Error('Could not find element with class .item-card');
+
     fireEvent.keyDown(card, { key: 'Space', code: 'Space' });
 
-    expect(capturedParams.get('details')).toBeNull();
+    expect(mockOpenCard).not.toHaveBeenCalled();
   });
 
-  it('preserves existing search parameters when updating the details ID', () => {
-    renderWithTracker(<ItemCard item={mockItem} />, ['/?search=Spock&page=2']);
+  it('calls toggleCard and switches icons when checkbox is clicked', () => {
+    const mockToggleCard = vi.fn();
 
-    const card = screen.getByRole('button');
-    fireEvent.click(card);
+    const { container, rerender } = render(
+      <ItemCard
+        item={mockItem}
+        toggleCard={mockToggleCard}
+        isSelected={false}
+        openCard={vi.fn()}
+      />
+    );
 
-    expect(capturedParams.get('search')).toBe('Spock');
-    expect(capturedParams.get('page')).toBe('2');
-    expect(capturedParams.get('details')).toBe('123');
+    const checkbox = container.querySelector('.checkbox');
+    if (!checkbox) throw new Error('Checkbox not found');
+
+    expect(container.innerHTML).toContain('lucide-square');
+    expect(container.innerHTML).not.toContain('lucide-square-check-big');
+
+    fireEvent.click(checkbox);
+    expect(mockToggleCard).toHaveBeenCalledTimes(1);
+
+    rerender(
+      <ItemCard
+        item={mockItem}
+        toggleCard={mockToggleCard}
+        isSelected={true}
+        openCard={vi.fn()}
+      />
+    );
+
+    expect(container.innerHTML).toContain('lucide-square-check-big');
+    expect(container.innerHTML).not.toContain('lucide-square"');
   });
 });

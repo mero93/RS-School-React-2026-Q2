@@ -1,3 +1,4 @@
+import { useSearchParams } from 'react-router-dom';
 import { useCheckItemStore } from '../../store/check-item.store';
 import type { ComicStrip } from '../../types/comic-strip';
 import ItemCard from '../ItemCard/ItemCard';
@@ -9,7 +10,14 @@ interface ResultsProps {
 }
 
 export default function Results(props: Readonly<ResultsProps>) {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { selectedItems, toggleItem } = useCheckItemStore();
+
+  const openCard = (uid: string) => {
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.set('details', uid);
+    setSearchParams(nextParams);
+  };
 
   if (props.hasError) {
     throw new Error('Simulation: Results component crashed!');
@@ -38,6 +46,7 @@ export default function Results(props: Readonly<ResultsProps>) {
                   toggleItem(item);
                 }}
                 isSelected={isSelected}
+                openCard={openCard}
               />
             );
           })

@@ -1,25 +1,22 @@
-import { useSearchParams } from 'react-router-dom';
 import type { ComicStrip } from '../../types/comic-strip';
 import './ItemCard.css';
 import { LucideSquare, LucideSquareCheckBig } from 'lucide-react';
 
 interface CardProps {
   item: ComicStrip;
+  openCard: (uid: string) => void;
   toggleCard: (event: React.MouseEvent) => void;
   isSelected: boolean;
 }
 
 export default function ItemCard({
   item,
+  openCard,
   toggleCard,
   isSelected,
 }: Readonly<CardProps>) {
-  const [searchParams, setSearchParams] = useSearchParams();
-
   const handleCardClick = () => {
-    const nextParams = new URLSearchParams(searchParams);
-    nextParams.set('details', item.uid);
-    setSearchParams(nextParams);
+    openCard(item.uid);
   };
 
   const dateRange = `Published: ${item.publishedYearFrom || 'N/A'} - ${
