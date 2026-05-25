@@ -7,7 +7,7 @@ import {
 } from 'react';
 import { ThemeContext, type Theme } from '../context/theme-context';
 
-export function ThemeProvider({ children }: Readonly<{ children: ReactNode }>) {
+export default function ThemeProvider({ children }: Readonly<{ children: ReactNode }>) {
   const [theme, setTheme] = useState<Theme>('light');
 
   const toggleTheme = useCallback(() => {
