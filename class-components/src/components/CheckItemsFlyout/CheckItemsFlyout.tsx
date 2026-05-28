@@ -21,7 +21,10 @@ export default function CheckItemsFlyout() {
       'number of pages',
       'year from',
       'year to',
+      'details url',
     ];
+
+    const baseUrl = globalThis.location.origin;
 
     const rows = selectedItems.map((item: ComicStrip) => {
       return [
@@ -36,6 +39,7 @@ export default function CheckItemsFlyout() {
         item.numberOfPages ?? '...',
         item.yearFrom ?? '...',
         item.yearTo ?? '...',
+        `${baseUrl}/?details=${item.uid}`,
       ];
     });
 
