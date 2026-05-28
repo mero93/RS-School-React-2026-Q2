@@ -8,10 +8,18 @@ import {
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import Home from './Home';
+import { ApiService } from '../../services/api.service';
 
 const mockSetStoredTerm = vi.fn();
 vi.mock('../../hooks/use-local-storage', () => ({
   useSearchLocalStorage: () => ['', mockSetStoredTerm],
+}));
+
+vi.mock('../../store/check-item.store', () => ({
+  useCheckItemStore: () => ({
+    selectedItems: [],
+    toggleItem: vi.fn(),
+  }),
 }));
 
 describe('Home Component', () => {
@@ -50,10 +58,7 @@ describe('Home Component', () => {
   };
 
   it('automatically appends the default page param to url if missing', async () => {
-    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
-      ok: true,
-      json: async () => mockApiResponse,
-    } as Response);
+    vi.spyOn(ApiService, 'search').mockResolvedValue(mockApiResponse);
 
     renderHomeWithRoutes(['/']);
 
@@ -62,11 +67,10 @@ describe('Home Component', () => {
     });
   });
 
-  it('fetches records using GET when search term is empty', async () => {
-    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
-      ok: true,
-      json: async () => mockApiResponse,
-    } as Response);
+  it('fetches records with correct arguments when search term is empty', async () => {
+    const apiSpy = vi
+      .spyOn(ApiService, 'search')
+      .mockResolvedValue(mockApiResponse);
 
     renderHomeWithRoutes(['/?page=1']);
 
@@ -74,17 +78,13 @@ describe('Home Component', () => {
       expect(screen.getByText('Star Trek Issue #1')).toBeInTheDocument();
     });
 
-    expect(fetchSpy).toHaveBeenCalledWith(
-      'https://stapi.co/api/v1/rest/comicStrip/search?pageNumber=0&pageSize=10',
-      expect.objectContaining({ method: 'GET' })
-    );
+    expect(apiSpy).toHaveBeenCalledWith('', 0);
   });
 
-  it('fetches records using POST payload when search parameter is present', async () => {
-    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
-      ok: true,
-      json: async () => mockApiResponse,
-    } as Response);
+  it('fetches records with correct payload when search parameter is present', async () => {
+    const apiSpy = vi
+      .spyOn(ApiService, 'search')
+      .mockResolvedValue(mockApiResponse);
 
     renderHomeWithRoutes(['/?page=1&search=Spock']);
 
@@ -92,20 +92,13 @@ describe('Home Component', () => {
       expect(screen.getByText('Star Trek Issue #1')).toBeInTheDocument();
     });
 
-    expect(fetchSpy).toHaveBeenCalledWith(
-      'https://stapi.co/api/v1/rest/comicStrip/search?pageNumber=0&pageSize=10',
-      expect.objectContaining({
-        method: 'POST',
-        body: 'title=Spock',
-      })
-    );
+    expect(apiSpy).toHaveBeenCalledWith('Spock', 0);
   });
 
   it('renders status indicators during network errors', async () => {
-    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
-      ok: false,
-      status: 500,
-    } as Response);
+    vi.spyOn(ApiService, 'search').mockRejectedValue(
+      new Error('Data fetch failed with status: 500')
+    );
 
     renderHomeWithRoutes(['/?page=1']);
 
@@ -117,10 +110,7 @@ describe('Home Component', () => {
   });
 
   it('applies explicit context layout classes when details parameter is found', async () => {
-    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
-      ok: true,
-      json: async () => mockApiResponse,
-    } as Response);
+    vi.spyOn(ApiService, 'search').mockResolvedValue(mockApiResponse);
 
     const { container } = renderHomeWithRoutes(['/?page=1&details=123']);
 
@@ -129,10 +119,7 @@ describe('Home Component', () => {
   });
 
   it('triggers search updates and shifts page parameter when query submission fires', async () => {
-    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
-      ok: true,
-      json: async () => mockApiResponse,
-    } as Response);
+    vi.spyOn(ApiService, 'search').mockResolvedValue(mockApiResponse);
 
     renderHomeWithRoutes(['/?page=2']);
 
@@ -141,9 +128,9 @@ describe('Home Component', () => {
     );
 
     const searchInput = screen.getByRole('textbox');
-    const searchButton = screen.getByRole('button', { name: /search/i });
-
     fireEvent.change(searchInput, { target: { value: 'Kirk' } });
+
+    const searchButton = screen.getByRole('button', { name: /search/i });
     fireEvent.click(searchButton);
 
     expect(mockSetStoredTerm).toHaveBeenCalledWith('Kirk');

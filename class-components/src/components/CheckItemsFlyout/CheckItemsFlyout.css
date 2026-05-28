@@ -1,0 +1,56 @@
+.flyout-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 50;
+}
+
+.flyout-content {
+  position: relative;
+  width: fit-content;
+  color: aliceblue;
+}
+
+.action-buttons {
+  width: fit-content;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.action-buttons > button {
+  padding: 8px 15px;
+  border: transparent;
+}
+
+.download-button {
+  background-color: rgb(4, 110, 4);
+}
+
+.download-button:hover {
+  background-color: rgba(4, 110, 4, 0.8);
+}
+
+.erase-button {
+  background-color: rgb(146, 23, 23);
+}
+
+.erase-button:hover {
+  background-color: rgba(146, 23, 23, 0.8);
+}
+
+.item-counter-badge {
+  top: 0;
+  left: 0;
+  transform: translateX(-50%) translateY(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  font-size: small;
+  font-weight: 700;
+  width: 20px;
+  height: 20px;
+  background-color: rgb(148, 124, 20);
+  border-radius: 50%;
+  user-select: none;
+}

@@ -16,25 +16,32 @@
   font-weight: 500;
   padding: 6px 12px;
   border-radius: 4px;
-  transition:
-    color 0.2s,
-    background-color 0.2s;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
 }
 
-a.nav-link:hover {
+.nav-link:not(.active):hover {
   color: var(--text-h);
   background-color: var(--border);
 }
 
-span.nav-link.active {
+.nav-link.active {
   color: var(--text-h);
   background-color: var(--accent-bg);
-  border: 1px solid var(--accent-border);
+  border-color: var(--accent-border);
+}
+
+.nav-link.active.no-click {
   cursor: default;
+  pointer-events: none;
 }
 
 @media (max-width: 1024px) {
   .global-header {
     padding: 16px 20px;
   }
+}
+
+.spacer {
+  flex-grow: 1;
 }

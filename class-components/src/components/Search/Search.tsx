@@ -18,7 +18,7 @@ export default function Search(props: Readonly<SearchProps>) {
 
   const handleSearchClick = () => {
     const trimmedTerm = inputValue.trim();
-    
+
     if (trimmedTerm === initialValue && !hasError) return;
 
     onSearch(trimmedTerm);

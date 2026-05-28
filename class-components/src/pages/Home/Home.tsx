@@ -3,11 +3,13 @@ import { Outlet, useSearchParams } from 'react-router-dom';
 import { useSearchLocalStorage } from '../../hooks/use-local-storage';
 import Search from '../../components/Search/Search';
 import type { ComicStrip } from '../../types/comic-strip';
-import type { ApiResponse, PageData } from '../../types/api-response';
+import type { PageData } from '../../types/api-response';
 import './Home.css';
 import Pagination from '../../components/Pagination/Pagination';
 import Results from '../../components/Result/Results';
 import Loader from '../../components/Loader/Loader';
+import { ApiService } from '../../services/api.service';
+import CheckItemsFlyout from '../../components/CheckItemsFlyout/CheckItemsFlyout';
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,6 +32,12 @@ export default function Home() {
   const detailId = searchParams.get('details');
 
   useEffect(() => {
+    if (!searchParams.has('search') && currentSearch) {
+      const nextParams = new URLSearchParams(searchParams);
+      nextParams.set('search', currentSearch);
+      setSearchParams(nextParams, { replace: true });
+    }
+
     if (!searchParams.has('page')) {
       const nextParams = new URLSearchParams(searchParams);
       nextParams.set('page', '1');
@@ -42,21 +50,8 @@ export default function Home() {
       setError(null);
       try {
         const targetPage = currentPage - 1;
-        const queryUrl = `https://stapi.co/api/v1/rest/comicStrip/search?pageNumber=${targetPage}&pageSize=10`;
 
-        const response = await fetch(queryUrl, {
-          method: currentSearch ? 'POST' : 'GET',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: currentSearch
-            ? new URLSearchParams({ title: currentSearch }).toString()
-            : undefined,
-        });
-
-        if (!response.ok) {
-          throw new Error(`Data fetch failed with status: ${response.status}`);
-        }
-
-        const data: ApiResponse = await response.json();
+        const data = await ApiService.search(currentSearch, targetPage);
 
         setItems(data.comicStrips || []);
         if (data.page) {
@@ -94,14 +89,15 @@ export default function Home() {
     <div className="home-container">
       <header className="home-header">
         <Search
+          key={currentSearch}
           onSearch={handleSearchSubmit}
           initialValue={currentSearch}
           isLoading={loading}
           hasError={!!error}
         />
       </header>
-
-      <main className={`main-layout ${detailId ? 'has-details' : ''}`}>
+      <CheckItemsFlyout />
+      <div className={`main-layout ${detailId ? 'has-details' : ''}`}>
         <section className="master-panel">
           {error && <p className="status-msg error">{error}</p>}
           {loading && <p className="status-msg">Loading records...</p>}
@@ -118,7 +114,7 @@ export default function Home() {
         <section className="outlet-panel">
           <Outlet />
         </section>
-      </main>
+      </div>
     </div>
   );
 }

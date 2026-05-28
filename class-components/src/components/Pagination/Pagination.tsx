@@ -11,7 +11,7 @@ export default function Pagination(props: Readonly<PaginationProps>) {
   const { pageNumber, totalPages } = page;
   const currentPage = pageNumber + 1;
 
-    if (totalPages <= 1) return null;
+  if (totalPages <= 1) return null;
 
   return (
     <div className="pagination-container">
@@ -55,7 +55,10 @@ export default function Pagination(props: Readonly<PaginationProps>) {
   );
 }
 
-const getPageNumbers = (pageNumber: number, totalPages: number): (number | string)[] => {
+const getPageNumbers = (
+  pageNumber: number,
+  totalPages: number
+): (number | string)[] => {
   const current = pageNumber + 1;
   const pages: (number | string)[] = [];
 

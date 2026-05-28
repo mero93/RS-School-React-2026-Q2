@@ -1,29 +1,38 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import './Header.css';
+import ThemeSwitcher from '../ThemeSwitcher/ThemeSwitcher';
 
 export default function Header() {
   const location = useLocation();
+  const [searchParams] = useSearchParams();
 
-  const isHomeActive = location.pathname === '/' && !location.search;
+  const isHomePath = location.pathname === '/';
   const isAboutActive = location.pathname === '/about';
+
+  const pageParam = Number.parseInt(searchParams.get('page') || '1', 10);
+
+  const shouldBlockHomeClick = isHomePath && pageParam === 1;
 
   return (
     <nav className="global-header">
-      {isHomeActive ? (
-        <span className="nav-link active">Home</span>
-      ) : (
-        <Link to="/" className="nav-link">
-          Home
-        </Link>
-      )}
+      <Link
+        to="/"
+        className={`nav-link ${isHomePath ? 'active' : ''} ${shouldBlockHomeClick ? 'no-click' : ''}`}
+        aria-disabled={shouldBlockHomeClick}
+      >
+        Home
+      </Link>
 
-      {isAboutActive ? (
-        <span className="nav-link active">About</span>
-      ) : (
-        <Link to="/about" className="nav-link">
-          About
-        </Link>
-      )}
+      <Link
+        to="/about"
+        className={`nav-link ${isAboutActive ? 'active no-click' : ''}`}
+        aria-disabled={isAboutActive}
+      >
+        About
+      </Link>
+
+      <span className="spacer" />
+      <ThemeSwitcher />
     </nav>
   );
 }
