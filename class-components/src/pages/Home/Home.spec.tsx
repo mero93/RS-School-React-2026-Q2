@@ -1,14 +1,28 @@
-import {
-  render,
-  screen,
-  waitFor,
-  fireEvent,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { screen, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
+import type { UseQueryResult } from '@tanstack/react-query';
 import Home from './Home';
-import { ApiService } from '../../services/api.service';
+import * as cacheModule from '../../hooks/useCache';
+import { renderWithProviders } from '../../setupTests';
+
+interface ComicSearchPageMetadata {
+  pageNumber: number;
+  pageSize: number;
+  numberOfElements: number;
+  totalElements: number;
+  totalPages: number;
+}
+
+interface ComicSearchStripItem {
+  uid: string;
+  title: string;
+}
+
+interface ComicSearchResultData {
+  comicStrips: ComicSearchStripItem[];
+  page: ComicSearchPageMetadata;
+}
 
 const mockSetStoredTerm = vi.fn();
 vi.mock('../../hooks/use-local-storage', () => ({
@@ -22,13 +36,77 @@ vi.mock('../../store/check-item.store', () => ({
   }),
 }));
 
+function createMockSuccessQuery(
+  data: ComicSearchResultData
+): UseQueryResult<ComicSearchResultData, Error> {
+  return {
+    data,
+    isLoading: false,
+    isPending: false,
+    isError: false,
+    error: null,
+    isFetching: false,
+    isLoadingError: false,
+    isRefetchError: false,
+    isSuccess: true,
+    status: 'success',
+    dataUpdatedAt: Date.now(),
+    errorUpdatedAt: 0,
+    failureCount: 0,
+    failureReason: null,
+    errorUpdateCount: 0,
+    isFetched: true,
+    isFetchedAfterMount: true,
+    isInitialLoading: false,
+    isPaused: false,
+    isPlaceholderData: false,
+    isRefetching: false,
+    isStale: false,
+    refetch: vi.fn(),
+  } as unknown as UseQueryResult<ComicSearchResultData, Error>;
+}
+
+function createMockErrorQuery(
+  error: Error
+): UseQueryResult<ComicSearchResultData, Error> {
+  return {
+    data: undefined,
+    isLoading: false,
+    isPending: false,
+    isError: true,
+    error,
+    isFetching: false,
+    isLoadingError: true,
+    isRefetchError: false,
+    isSuccess: false,
+    status: 'error',
+    dataUpdatedAt: 0,
+    errorUpdatedAt: Date.now(),
+    failureCount: 1,
+    failureReason: error,
+    errorUpdateCount: 1,
+    isFetched: true,
+    isFetchedAfterMount: true,
+    isInitialLoading: false,
+    isPaused: false,
+    isPlaceholderData: false,
+    isRefetching: false,
+    isStale: false,
+    refetch: vi.fn(),
+  } as unknown as UseQueryResult<ComicSearchResultData, Error>;
+}
+
 describe('Home Component', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     vi.clearAllMocks();
+
+    vi.spyOn(cacheModule, 'useInvalidateComicCache').mockReturnValue({
+      invalidateAll: vi.fn(),
+    });
   });
 
-  const mockApiResponse = {
+  const mockApiResponse: ComicSearchResultData = {
     comicStrips: [
       { uid: '1', title: 'Star Trek Issue #1' },
       { uid: '2', title: 'Star Trek Issue #2' },
@@ -43,22 +121,22 @@ describe('Home Component', () => {
   };
 
   const renderHomeWithRoutes = (initialEntries = ['/']) => {
-    return render(
-      <MemoryRouter initialEntries={initialEntries}>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route
-              path="details-outlet"
-              element={<div>Mocked Outlet Content</div>}
-            />
-          </Route>
-        </Routes>
-      </MemoryRouter>
+    return renderWithProviders(
+      <Routes>
+        <Route path="/" element={<Home />}>
+          <Route
+            path="details-outlet"
+            element={<div>Mocked Outlet Content</div>}
+          />
+        </Route>
+      </Routes>,
+      { initialEntries }
     );
   };
 
   it('automatically appends the default page param to url if missing', async () => {
-    vi.spyOn(ApiService, 'search').mockResolvedValue(mockApiResponse);
+    const mockSuccess = createMockSuccessQuery(mockApiResponse);
+    vi.spyOn(cacheModule, 'useComicSearch').mockReturnValue(mockSuccess);
 
     renderHomeWithRoutes(['/']);
 
@@ -68,9 +146,10 @@ describe('Home Component', () => {
   });
 
   it('fetches records with correct arguments when search term is empty', async () => {
-    const apiSpy = vi
-      .spyOn(ApiService, 'search')
-      .mockResolvedValue(mockApiResponse);
+    const mockSuccess = createMockSuccessQuery(mockApiResponse);
+    const useComicSearchSpy = vi
+      .spyOn(cacheModule, 'useComicSearch')
+      .mockReturnValue(mockSuccess);
 
     renderHomeWithRoutes(['/?page=1']);
 
@@ -78,13 +157,14 @@ describe('Home Component', () => {
       expect(screen.getByText('Star Trek Issue #1')).toBeInTheDocument();
     });
 
-    expect(apiSpy).toHaveBeenCalledWith('', 0);
+    expect(useComicSearchSpy).toHaveBeenCalledWith('', 0);
   });
 
   it('fetches records with correct payload when search parameter is present', async () => {
-    const apiSpy = vi
-      .spyOn(ApiService, 'search')
-      .mockResolvedValue(mockApiResponse);
+    const mockSuccess = createMockSuccessQuery(mockApiResponse);
+    const useComicSearchSpy = vi
+      .spyOn(cacheModule, 'useComicSearch')
+      .mockReturnValue(mockSuccess);
 
     renderHomeWithRoutes(['/?page=1&search=Spock']);
 
@@ -92,13 +172,14 @@ describe('Home Component', () => {
       expect(screen.getByText('Star Trek Issue #1')).toBeInTheDocument();
     });
 
-    expect(apiSpy).toHaveBeenCalledWith('Spock', 0);
+    expect(useComicSearchSpy).toHaveBeenCalledWith('Spock', 0);
   });
 
   it('renders status indicators during network errors', async () => {
-    vi.spyOn(ApiService, 'search').mockRejectedValue(
+    const mockError = createMockErrorQuery(
       new Error('Data fetch failed with status: 500')
     );
+    vi.spyOn(cacheModule, 'useComicSearch').mockReturnValue(mockError);
 
     renderHomeWithRoutes(['/?page=1']);
 
@@ -110,7 +191,8 @@ describe('Home Component', () => {
   });
 
   it('applies explicit context layout classes when details parameter is found', async () => {
-    vi.spyOn(ApiService, 'search').mockResolvedValue(mockApiResponse);
+    const mockSuccess = createMockSuccessQuery(mockApiResponse);
+    vi.spyOn(cacheModule, 'useComicSearch').mockReturnValue(mockSuccess);
 
     const { container } = renderHomeWithRoutes(['/?page=1&details=123']);
 
@@ -119,13 +201,10 @@ describe('Home Component', () => {
   });
 
   it('triggers search updates and shifts page parameter when query submission fires', async () => {
-    vi.spyOn(ApiService, 'search').mockResolvedValue(mockApiResponse);
+    const mockSuccess = createMockSuccessQuery(mockApiResponse);
+    vi.spyOn(cacheModule, 'useComicSearch').mockReturnValue(mockSuccess);
 
     renderHomeWithRoutes(['/?page=2']);
-
-    await waitForElementToBeRemoved(() =>
-      screen.queryByText('Loading records...')
-    );
 
     const searchInput = screen.getByRole('textbox');
     fireEvent.change(searchInput, { target: { value: 'Kirk' } });
@@ -133,6 +212,8 @@ describe('Home Component', () => {
     const searchButton = screen.getByRole('button', { name: /search/i });
     fireEvent.click(searchButton);
 
-    expect(mockSetStoredTerm).toHaveBeenCalledWith('Kirk');
+    await waitFor(() => {
+      expect(mockSetStoredTerm).toHaveBeenCalledWith('Kirk');
+    });
   });
 });

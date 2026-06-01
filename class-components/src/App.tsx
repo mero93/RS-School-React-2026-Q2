@@ -2,14 +2,14 @@ import { RouterProvider } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import './App.css';
 import { router } from './router/router';
-import ThemeProvider from './providers/ThemeProvider';
+import GlobalProvider from './providers/GlobalProvider';
 
 export default function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider>
+      <GlobalProvider>
         <RouterProvider router={router} />
-      </ThemeProvider>
+      </GlobalProvider>
     </ErrorBoundary>
   );
 }

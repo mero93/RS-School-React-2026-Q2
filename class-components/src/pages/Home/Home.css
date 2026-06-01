@@ -7,7 +7,13 @@
 }
 
 .home-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid rgb(163, 155, 155)
 }
 
 .main-layout {
@@ -57,5 +63,42 @@
     position: static;
     border-left: none;
     border-top: 1px solid var(--border);
+  }
+}
+
+.refresh-btn {
+  display: flex;
+  height: min-content;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: goldenrod;
+}
+
+.refresh-btn:hover:not(:disabled) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.refresh-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.refresh-animate {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
