@@ -1,35 +1,30 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Outlet, useSearchParams } from 'react-router-dom';
 import { useSearchLocalStorage } from '../../hooks/use-local-storage';
 import Search from '../../components/Search/Search';
-import type { ComicStrip } from '../../types/comic-strip';
-import type { PageData } from '../../types/api-response';
 import './Home.css';
 import Pagination from '../../components/Pagination/Pagination';
 import Results from '../../components/Result/Results';
 import Loader from '../../components/Loader/Loader';
-import { ApiService } from '../../services/api.service';
 import CheckItemsFlyout from '../../components/CheckItemsFlyout/CheckItemsFlyout';
+import { useComicSearch, useInvalidateComicCache } from '../../hooks/useCache';
+import { LucideRefreshCcwDot } from 'lucide-react';
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [storedTerm, setStoredTerm] = useSearchLocalStorage();
-
-  const [items, setItems] = useState<ComicStrip[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const [pageMetadata, setPageMetadata] = useState<PageData>({
-    pageNumber: 0,
-    pageSize: 10,
-    numberOfElements: 0,
-    totalElements: 0,
-    totalPages: 1,
-  });
+  const { invalidateAll } = useInvalidateComicCache();
 
   const currentSearch = searchParams.get('search') ?? storedTerm;
   const currentPage = Number(searchParams.get('page') ?? '1');
   const detailId = searchParams.get('details');
+
+  const targetPage = currentPage - 1;
+
+  const { data, isLoading, isError, error, isFetching } = useComicSearch(
+    currentSearch,
+    targetPage
+  );
 
   useEffect(() => {
     if (!searchParams.has('search') && currentSearch) {
@@ -42,30 +37,8 @@ export default function Home() {
       const nextParams = new URLSearchParams(searchParams);
       nextParams.set('page', '1');
       setSearchParams(nextParams, { replace: true });
-      return;
     }
-
-    const fetchResults = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const targetPage = currentPage - 1;
-
-        const data = await ApiService.search(currentSearch, targetPage);
-
-        setItems(data.comicStrips || []);
-        if (data.page) {
-          setPageMetadata(data.page);
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchResults();
-  }, [currentSearch, currentPage, searchParams, setSearchParams]);
+  }, [currentSearch, searchParams, setSearchParams]);
 
   const handleSearchSubmit = (newTerm: string) => {
     setStoredTerm(newTerm);
@@ -85,25 +58,52 @@ export default function Home() {
     setSearchParams(nextParams);
   };
 
+  const items = data?.comicStrips ?? [];
+  const pageMetadata = data?.page ?? {
+    pageNumber: targetPage,
+    pageSize: 10,
+    numberOfElements: 0,
+    totalElements: 0,
+    totalPages: 1,
+  };
+
   return (
     <div className="home-container">
       <header className="home-header">
+        <button
+          className="refresh-btn"
+          onClick={invalidateAll}
+          disabled={isFetching}
+          type="button"
+        >
+          <LucideRefreshCcwDot
+            className={isFetching ? 'refresh-animate' : ''}
+          />
+          <span>Refresh</span>
+        </button>
         <Search
           key={currentSearch}
           onSearch={handleSearchSubmit}
           initialValue={currentSearch}
-          isLoading={loading}
-          hasError={!!error}
+          isLoading={isLoading}
+          hasError={isError}
         />
       </header>
+
       <CheckItemsFlyout />
+
       <div className={`main-layout ${detailId ? 'has-details' : ''}`}>
         <section className="master-panel">
-          {error && <p className="status-msg error">{error}</p>}
-          {loading && <p className="status-msg">Loading records...</p>}
-          <Loader isLoading={loading} />
+          {isError && (
+            <p className="status-msg error">
+              {error instanceof Error ? error.message : 'An error occurred'}
+            </p>
+          )}
 
-          {!loading && !error && (
+          {isLoading && <p className="status-msg">Loading records...</p>}
+          <Loader isLoading={isLoading} />
+
+          {!isLoading && !isError && (
             <>
               <Results hasError={false} items={items} />
               <Pagination page={pageMetadata} onPageChange={handlePageChange} />
