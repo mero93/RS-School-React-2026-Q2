@@ -23,7 +23,7 @@ export default function Results(props: Readonly<ResultsProps>) {
     throw new Error('Simulation: Results component crashed!');
   }
 
-  const { items } = props;
+  const items = props.items ?? [];
 
   return (
     <div className="results-container">

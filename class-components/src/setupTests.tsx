@@ -1,6 +1,11 @@
 import '@testing-library/jest-dom';
+import React, { type ReactNode } from 'react';
+import { render } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { vi } from 'vitest';
 import mockComics from './__tests__/comics.json';
+import { MemoryRouter } from 'react-router-dom';
+import GlobalProvider from './providers/GlobalProvider';
 
 vi.mock('./services/api.service', () => {
   return {
@@ -31,6 +36,11 @@ vi.mock('./services/api.service', () => {
             };
           }
         ),
+      getOne: vi.fn().mockImplementation(async (uid: string) => {
+        const item = mockComics.find((c) => c.uid === uid);
+        if (!item) throw new Error('Comic not found');
+        return item;
+      }),
     },
   };
 });
@@ -52,3 +62,33 @@ const localStorageMock = (() => {
 })();
 
 Object.defineProperty(globalThis, 'localStorage', { value: localStorageMock });
+
+export function renderWithProviders(
+  ui: React.ReactElement,
+  options?: { initialEntries?: string[] }
+) {
+  const testQueryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+        staleTime: Infinity,
+        gcTime: Infinity,
+      },
+    },
+  });
+
+  const Wrapper = ({ children }: { readonly children: ReactNode }) => (
+    <QueryClientProvider client={testQueryClient}>
+      <GlobalProvider>
+        <MemoryRouter initialEntries={options?.initialEntries ?? ['/']}>
+          {children}
+        </MemoryRouter>
+      </GlobalProvider>
+    </QueryClientProvider>
+  );
+
+  return {
+    ...render(ui, { wrapper: Wrapper }),
+    queryClient: testQueryClient,
+  };
+}
