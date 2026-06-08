@@ -1,4 +1,4 @@
-export const validateMinimalEmail = (email: string): boolean => {
+export const validateEmail = (email: string): boolean => {
   if (!email) return false;
   const atParts = email.split('@');
   if (atParts.length !== 2) return false;
@@ -12,7 +12,7 @@ export const validateMinimalEmail = (email: string): boolean => {
   return dotParts.every((part) => part.length > 0);
 };
 
-export interface PasswordStrength {
+export interface PasswordCheck {
   hasNumber: boolean;
   hasUpper: boolean;
   hasLower: boolean;
@@ -20,9 +20,9 @@ export interface PasswordStrength {
   score: number;
 }
 
-export const checkPasswordStrength = (password: string): PasswordStrength => {
+export const checkPasswordStrength = (password: string): PasswordCheck => {
   const status = {
-    hasNumber: /d/.test(password),
+    hasNumber: /\d/.test(password),
     hasUpper: /[A-Z]/.test(password),
     hasLower: /[a-z]/.test(password),
     hasSpecial: /[^A-Za-z0-9]/.test(password),
