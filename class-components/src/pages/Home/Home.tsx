@@ -11,6 +11,8 @@ import { useComicSearch, useInvalidateComicCache } from '../../hooks/useCache';
 import { LucideRefreshCcwDot, LucideExternalLink } from 'lucide-react';
 import Modal from '../../components/Modal/Modal';
 import { useModalStore } from '../../store/useModal.store';
+import UncontrolledForm from '../../components/Forms/Uncontrolled';
+import HookForm from '../../components/Forms/ReactHook';
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -148,16 +150,8 @@ export default function Home() {
             : 'React Hook Form Profile'
         }
       >
-        {view === 'uncontrolled' && (
-          <div className="form-placeholder">
-            <p>Uncontrolled Form Component Content Goes Here</p>
-          </div>
-        )}
-        {view === 'hook-form' && (
-          <div className="form-placeholder">
-            <p>React Hook Form Component Content Goes Here</p>
-          </div>
-        )}
+        {view === 'uncontrolled' && <UncontrolledForm />}
+        {view === 'hook-form' && <HookForm />}
       </Modal>
     </div>
   );
