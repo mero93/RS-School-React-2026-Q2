@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFormStore } from '../../store/useForm.store';
 import { useModalStore } from '../../store/useModal.store';
@@ -21,13 +21,17 @@ export default function HookForm() {
     handleSubmit,
     formState: { errors, isValid },
     reset,
-    watch,
+    control,
   } = useForm<FormFieldsData>({
     resolver: zodResolver(createFormSchema(countries)),
     mode: 'onChange',
   });
 
-  const passwordValue = watch('password', '');
+  const passwordValue = useWatch({
+    control,
+    name: 'password',
+    defaultValue: '',
+  });
   const check = checkPasswordStrength(passwordValue);
 
   const onFormSubmit = async (data: FormFieldsData) => {
