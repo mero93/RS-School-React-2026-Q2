@@ -8,12 +8,18 @@ import Results from '../../components/Result/Results';
 import Loader from '../../components/Loader/Loader';
 import CheckItemsFlyout from '../../components/CheckItemsFlyout/CheckItemsFlyout';
 import { useComicSearch, useInvalidateComicCache } from '../../hooks/useCache';
-import { LucideRefreshCcwDot } from 'lucide-react';
+import { LucideRefreshCcwDot, LucideExternalLink } from 'lucide-react';
+import Modal from '../../components/Modal/Modal';
+import { useModalStore } from '../../store/useModal.store';
+import UncontrolledForm from '../../components/Forms/UncontrolledForm';
+import HookForm from '../../components/Forms/HookForm';
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [storedTerm, setStoredTerm] = useSearchLocalStorage();
   const { invalidateAll } = useInvalidateComicCache();
+
+  const { isOpen, view, openModal, closeModal } = useModalStore();
 
   const currentSearch = searchParams.get('search') ?? storedTerm;
   const currentPage = Number(searchParams.get('page') ?? '1');
@@ -70,17 +76,36 @@ export default function Home() {
   return (
     <div className="home-container">
       <header className="home-header">
-        <button
-          className="refresh-btn"
-          onClick={invalidateAll}
-          disabled={isFetching}
-          type="button"
-        >
-          <LucideRefreshCcwDot
-            className={isFetching ? 'refresh-animate' : ''}
-          />
-          <span>Refresh</span>
-        </button>
+        <div className="btn-group">
+          <button
+            className="accent-btn"
+            onClick={() => openModal('uncontrolled')}
+            type="button"
+          >
+            <LucideExternalLink />
+            <span>Uncontrolled Form</span>
+          </button>
+          <button
+            className="accent-btn"
+            onClick={() => openModal('hook-form')}
+            type="button"
+          >
+            <LucideExternalLink />
+            <span>React Hook Form</span>
+          </button>
+          <button
+            className="accent-btn"
+            onClick={invalidateAll}
+            disabled={isFetching}
+            type="button"
+          >
+            <LucideRefreshCcwDot
+              className={isFetching ? 'accent-animate' : ''}
+            />
+            <span>Refresh</span>
+          </button>
+        </div>
+
         <Search
           key={currentSearch}
           onSearch={handleSearchSubmit}
@@ -115,6 +140,19 @@ export default function Home() {
           <Outlet />
         </section>
       </div>
+
+      <Modal
+        isOpen={isOpen}
+        onClose={closeModal}
+        title={
+          view === 'uncontrolled'
+            ? 'Uncontrolled Form Profile'
+            : 'React Hook Form Profile'
+        }
+      >
+        {view === 'uncontrolled' && <UncontrolledForm />}
+        {view === 'hook-form' && <HookForm />}
+      </Modal>
     </div>
   );
 }
