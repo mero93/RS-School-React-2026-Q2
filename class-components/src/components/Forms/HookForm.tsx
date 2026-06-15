@@ -6,7 +6,10 @@ import {
   createFormSchema,
   type FormFieldsData,
 } from '../../schemas/form.schema';
-import { convertFileToBase64 } from '../../utils/formHelpers';
+import {
+  convertFileToBase64,
+  checkPasswordStrength,
+} from '../../utils/formHelpers';
 import './Forms.css';
 
 export default function HookForm() {
@@ -18,10 +21,14 @@ export default function HookForm() {
     handleSubmit,
     formState: { errors, isValid },
     reset,
+    watch,
   } = useForm<FormFieldsData>({
     resolver: zodResolver(createFormSchema(countries)),
     mode: 'onChange',
   });
+
+  const passwordValue = watch('password', '');
+  const check = checkPasswordStrength(passwordValue);
 
   const onFormSubmit = async (data: FormFieldsData) => {
     try {
@@ -108,6 +115,22 @@ export default function HookForm() {
         <input id="hf-password" type="password" {...register('password')} />
         {errors.password && (
           <span className="error-msg">{errors.password.message}</span>
+        )}
+
+        {passwordValue && (
+          <div className="strength-meter">
+            <p>Password Strength Checklist:</p>
+            <span className={check.hasUpper ? 'pass' : 'fail'}>
+              ✓ Uppercase
+            </span>
+            <span className={check.hasLower ? 'pass' : 'fail'}>
+              ✓ Lowercase
+            </span>
+            <span className={check.hasNumber ? 'pass' : 'fail'}>✓ Number</span>
+            <span className={check.hasSpecial ? 'pass' : 'fail'}>
+              ✓ Special Char
+            </span>
+          </div>
         )}
       </div>
 

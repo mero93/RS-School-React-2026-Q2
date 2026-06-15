@@ -11,8 +11,8 @@ import { useComicSearch, useInvalidateComicCache } from '../../hooks/useCache';
 import { LucideRefreshCcwDot, LucideExternalLink } from 'lucide-react';
 import Modal from '../../components/Modal/Modal';
 import { useModalStore } from '../../store/useModal.store';
-import UncontrolledForm from '../../components/Forms/Uncontrolled';
-import HookForm from '../../components/Forms/ReactHook';
+import UncontrolledForm from '../../components/Forms/UncontrolledForm';
+import HookForm from '../../components/Forms/HookForm';
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
