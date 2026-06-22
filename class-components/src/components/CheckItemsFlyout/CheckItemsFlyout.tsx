@@ -1,52 +1,17 @@
 import { LucideDownload, LucideEraser } from 'lucide-react';
 import { useCheckItemStore } from '../../store/check-item.store';
-import type { ComicStrip } from '../../types/comic-strip';
 import './CheckItemsFlyout.css';
+import { generateCsv } from '../../actions/export-csv';
 
 export default function CheckItemsFlyout() {
   const { selectedItems, selectedCount, clearAll } = useCheckItemStore();
 
   if (!selectedCount) return null;
 
-  const handleDownload = () => {
-    const headers = [
-      'uid',
-      'title',
-      'published year from',
-      'published month from',
-      'published day from',
-      'published year to',
-      'published month to',
-      'published day to',
-      'number of pages',
-      'year from',
-      'year to',
-      'details url',
-    ];
-
+  const handleDownload = async () => {
     const baseUrl = globalThis.location.origin;
 
-    const rows = selectedItems.map((item: ComicStrip) => {
-      return [
-        `"${item.uid}"`,
-        `"${item.title?.replaceAll('"', '""')}"`,
-        item.publishedYearFrom ?? '...',
-        item.publishedMonthFrom ?? '...',
-        item.publishedDayFrom ?? '...',
-        item.publishedYearTo ?? '...',
-        item.publishedMonthTo ?? '...',
-        item.publishedDayTo ?? '...',
-        item.numberOfPages ?? '...',
-        item.yearFrom ?? '...',
-        item.yearTo ?? '...',
-        `${baseUrl}/?details=${item.uid}`,
-      ];
-    });
-
-    const csvContent = [
-      headers.join(','),
-      ...rows.map((row) => row.join(',')),
-    ].join('\n');
+    const csvContent = await generateCsv(selectedItems, baseUrl);
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
 
