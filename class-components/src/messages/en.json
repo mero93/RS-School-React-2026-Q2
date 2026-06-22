@@ -1,1 +1,46 @@
-{}
+{
+  "Home": {
+    "BasePage": {
+      "refresh": "Refresh",
+      "loading": "Loading records...",
+      "errorDefault": "An error occurred"
+    },
+    "Search": {
+      "placeholder": "Search Star Trek Comics...",
+      "searchBtn": "Search",
+      "loadingBtn": "..."
+    },
+    "Results": {
+      "heading": "Results Area",
+      "emptyState": "No results found. Try a different search term.",
+      "crashSimulation": "Simulation: Results component crashed!",
+      "ItemCard": {
+        "published": "Published:",
+        "present": "Present",
+        "pages": "Pages:"
+      }
+    },
+    "Loader": {
+      "text": "Loading Comics data..."
+    },
+    "ItemDetails": {
+      "heading": "Comic Details",
+      "publishedRange": "Published Range:",
+      "length": "Length:",
+      "pages": "Pages",
+      "catalogId": "Catalog ID:",
+      "loading": "Loading details...",
+      "noDetails": "No details found.",
+      "error": "An error occurred"
+    }
+  },
+  "Global": {
+    "Header": {
+      "navHome": "Home",
+      "navAbout": "About"
+    },
+    "LanguageSwitcher": {
+      "label": "Language"
+    }
+  }
+}

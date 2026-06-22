@@ -1,6 +1,9 @@
+'use client';
+
 import type { ComicStrip } from '../../types/comic-strip';
 import './ItemCard.css';
 import { LucideSquare, LucideSquareCheckBig } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface CardProps {
   item: ComicStrip;
@@ -15,14 +18,18 @@ export default function ItemCard({
   toggleCard,
   isSelected,
 }: Readonly<CardProps>) {
+  const t = useTranslations('Home.Results.ItemCard');
+
   const handleCardClick = () => {
     openCard(item.uid);
   };
 
-  const dateRange = `Published: ${item.publishedYearFrom || 'N/A'} - ${
-    item.publishedYearTo || 'Present'
+  const dateRange = `${t('published')} ${item.publishedYearFrom || 'N/A'} - ${
+    item.publishedYearTo || t('present')
   }`;
-  const pages = item.numberOfPages ? ` | Pages: ${item.numberOfPages}` : '';
+  const pages = item.numberOfPages
+    ? ` | ${t('pages')} ${item.numberOfPages}`
+    : '';
   const description = `${dateRange}${pages}`;
 
   return (
@@ -38,7 +45,7 @@ export default function ItemCard({
       <h3 className="item-card-title">{item.title}</h3>
       <p className="item-card-text">{description}</p>
 
-      <button className="checkbox" onClick={(e) => toggleCard(e)}>
+      <button className="checkbox" onClick={(e) => toggleCard(e)} type="button">
         {isSelected ? <LucideSquareCheckBig /> : <LucideSquare />}
       </button>
     </div>

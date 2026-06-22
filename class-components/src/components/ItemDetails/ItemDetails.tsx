@@ -1,17 +1,23 @@
-import { useSearchParams } from 'react-router-dom';
-import './ItemDetails.css';
+'use client';
+
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useComicDetail } from '../../hooks/useCache';
+import { useTranslations } from 'next-intl';
+import './ItemDetails.css';
 
 export default function ItemDetails() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const detailId = searchParams.get('details');
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const t = useTranslations('Home.ItemDetails');
 
+  const detailId = searchParams.get('details');
   const { data: comic, isLoading, isError, error } = useComicDetail(detailId);
 
   const handleClose = () => {
-    const nextParams = new URLSearchParams(searchParams);
+    const nextParams = new URLSearchParams(searchParams.toString());
     nextParams.delete('details');
-    setSearchParams(nextParams);
+    router.push(`${pathname}?${nextParams.toString()}`);
   };
 
   const formatDate = (year?: number, month?: number, day?: number): string => {
@@ -39,7 +45,7 @@ export default function ItemDetails() {
   return (
     <div className="details-panel">
       <div className="details-header">
-        <h2>Comic Details</h2>
+        <h2>{t('heading')}</h2>
         <button
           type="button"
           className="close-btn"
@@ -53,27 +59,30 @@ export default function ItemDetails() {
       <div className="details-content">
         {isError && (
           <p className="details-status error">
-            {error instanceof Error ? error.message : 'An error occurred'}
+            {error instanceof Error ? error.message : t('error')}
           </p>
         )}
 
-        {isLoading && <p className="details-status">Loading details...</p>}
+        {isLoading && <p className="details-status">{t('loading')}</p>}
 
         {!isLoading && !isError && comic && (
           <div className="comic-info">
             <h3 className="comic-title">{comic.title}</h3>
             <div className="meta-group">
               <p>
-                <strong>Published Range:</strong> {dateRange}
+                <strong>{t('publishedRange')}</strong> {dateRange}
               </p>
               {!!comic.numberOfPages && (
                 <p>
-                  <strong>Length:</strong> {comic.numberOfPages} Pages
+                  <strong>{t('length')}</strong> {comic.numberOfPages}{' '}
+                  {t('pages')}
                 </p>
               )}
             </div>
             <div className="uid-badge">
-              <small>Catalog ID: {comic.uid}</small>
+              <small>
+                {t('catalogId')} {comic.uid}
+              </small>
             </div>
           </div>
         )}

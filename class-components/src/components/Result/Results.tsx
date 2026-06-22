@@ -1,7 +1,10 @@
-import { useSearchParams } from 'react-router-dom';
+'use client';
+
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useCheckItemStore } from '../../store/check-item.store';
 import type { ComicStrip } from '../../types/comic-strip';
 import ItemCard from '../ItemCard/ItemCard';
+import { useTranslations } from 'next-intl';
 import './Results.css';
 
 interface ResultsProps {
@@ -10,30 +13,32 @@ interface ResultsProps {
 }
 
 export default function Results(props: Readonly<ResultsProps>) {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const t = useTranslations('Home.Results');
+
   const { selectedItems, toggleItem } = useCheckItemStore();
 
   const openCard = (uid: string) => {
-    const nextParams = new URLSearchParams(searchParams);
+    const nextParams = new URLSearchParams(searchParams.toString());
     nextParams.set('details', uid);
-    setSearchParams(nextParams);
+    router.push(`${pathname}?${nextParams.toString()}`);
   };
 
   if (props.hasError) {
-    throw new Error('Simulation: Results component crashed!');
+    throw new Error(t('crashSimulation'));
   }
 
   const items = props.items ?? [];
 
   return (
     <div className="results-container">
-      <h3 className="results-heading">Results Area</h3>
+      <h3 className="results-heading">{t('heading')}</h3>
 
       <div className="results-grid">
         {items.length === 0 ? (
-          <p className="results-empty-state">
-            No results found. Try a different search term.
-          </p>
+          <p className="results-empty-state">{t('emptyState')}</p>
         ) : (
           items.map((item) => {
             const isSelected = selectedItems.some((i) => i.uid === item.uid);

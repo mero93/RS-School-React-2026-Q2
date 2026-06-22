@@ -1,4 +1,5 @@
 import { useState, type ChangeEvent } from 'react';
+import { useTranslations } from 'next-intl';
 import './Search.css';
 
 interface SearchProps {
@@ -11,6 +12,7 @@ interface SearchProps {
 export default function Search(props: Readonly<SearchProps>) {
   const { onSearch, isLoading, initialValue, hasError } = props;
   const [inputValue, setInputValue] = useState<string>(initialValue);
+  const t = useTranslations('Home.Search');
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -18,9 +20,7 @@ export default function Search(props: Readonly<SearchProps>) {
 
   const handleSearchClick = () => {
     const trimmedTerm = inputValue.trim();
-
     if (trimmedTerm === initialValue && !hasError) return;
-
     onSearch(trimmedTerm);
   };
 
@@ -32,7 +32,7 @@ export default function Search(props: Readonly<SearchProps>) {
           className="search-input"
           value={inputValue}
           onChange={handleInputChange}
-          placeholder="Search Star Trek Comics..."
+          placeholder={t('placeholder')}
           disabled={isLoading}
         />
         <button
@@ -41,7 +41,7 @@ export default function Search(props: Readonly<SearchProps>) {
           onClick={handleSearchClick}
           disabled={isLoading}
         >
-          {isLoading ? '...' : 'Search'}
+          {isLoading ? t('loadingBtn') : t('searchBtn')}
         </button>
       </div>
     </div>

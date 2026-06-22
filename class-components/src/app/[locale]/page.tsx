@@ -1,8 +1,8 @@
 'use client';
 
 import { useSearchLocalStorage } from '../../hooks/use-local-storage';
-import Search from '../../components/Search/Search';
-import './page.module.css';
+import './page.css';
+import '../index.css';
 import Pagination from '../../components/Pagination/Pagination';
 import Results from '../../components/Result/Results';
 import Loader from '../../components/Loader/Loader';
@@ -10,11 +10,20 @@ import CheckItemsFlyout from '../../components/CheckItemsFlyout/CheckItemsFlyout
 import { useComicSearch, useInvalidateComicCache } from '../../hooks/useCache';
 import { LucideRefreshCcwDot } from 'lucide-react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import dynamic from 'next/dynamic';
+import { useTranslations } from 'next-intl';
 
-export default function Home({ children }: Readonly<{ children: React.ReactNode }>) {
+const Search = dynamic(() => import('../../components/Search/Search'), {
+  ssr: false,
+});
+
+export default function Home({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const t = useTranslations('Home.BasePage');
 
   const [storedTerm, setStoredTerm] = useSearchLocalStorage();
   const { invalidateAll } = useInvalidateComicCache();
@@ -32,23 +41,19 @@ export default function Home({ children }: Readonly<{ children: React.ReactNode 
 
   const handleSearchSubmit = (newTerm: string) => {
     setStoredTerm(newTerm);
-
     const nextParams = new URLSearchParams(searchParams.toString());
-
     if (newTerm) {
       nextParams.set('search', newTerm);
     } else {
       nextParams.delete('search');
     }
     nextParams.set('page', '1');
-
     router.push(`${pathname}?${nextParams.toString()}`);
   };
 
   const handlePageChange = (zeroIndexedPage: number) => {
     const nextParams = new URLSearchParams(searchParams.toString());
     nextParams.set('page', String(zeroIndexedPage + 1));
-
     router.push(`${pathname}?${nextParams.toString()}`);
   };
 
@@ -73,7 +78,7 @@ export default function Home({ children }: Readonly<{ children: React.ReactNode 
           <LucideRefreshCcwDot
             className={isFetching ? 'refresh-animate' : ''}
           />
-          <span>Refresh</span>
+          <span>{t('refresh')}</span>
         </button>
         <Search
           key={currentSearch}
@@ -90,11 +95,11 @@ export default function Home({ children }: Readonly<{ children: React.ReactNode 
         <section className="master-panel">
           {isError && (
             <p className="status-msg error">
-              {error instanceof Error ? error.message : 'An error occurred'}
+              {error instanceof Error ? error.message : t('errorDefault')}
             </p>
           )}
 
-          {isLoading && <p className="status-msg">Loading records...</p>}
+          {isLoading && <p className="status-msg">{t('loading')}</p>}
           <Loader isLoading={isLoading} />
 
           {!isLoading && !isError && (

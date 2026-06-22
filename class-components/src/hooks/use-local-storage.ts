@@ -4,6 +4,10 @@ export const SEARCH_STORAGE_KEY = 'search_term';
 
 export function useSearchLocalStorage(): [string, (value: string) => void] {
   const [storedValue, setStoredValue] = useState<string>(() => {
+    if (typeof globalThis === 'undefined') {
+      return '';
+    }
+
     try {
       const item = globalThis.localStorage.getItem(SEARCH_STORAGE_KEY);
       return item ?? '';
