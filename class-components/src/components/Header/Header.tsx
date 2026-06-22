@@ -1,13 +1,16 @@
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+'use client';
+
 import './Header.css';
 import ThemeSwitcher from '../ThemeSwitcher/ThemeSwitcher';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { Link } from '../../i18n/routing';
 
 export default function Header() {
-  const location = useLocation();
-  const [searchParams] = useSearchParams();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const isHomePath = location.pathname === '/';
-  const isAboutActive = location.pathname === '/about';
+  const isHomePath = pathname === '/';
+  const isAboutActive = pathname === '/about';
 
   const pageParam = Number.parseInt(searchParams.get('page') || '1', 10);
 
@@ -16,7 +19,7 @@ export default function Header() {
   return (
     <nav className="global-header">
       <Link
-        to="/"
+        href="/"
         className={`nav-link ${isHomePath ? 'active' : ''} ${shouldBlockHomeClick ? 'no-click' : ''}`}
         aria-disabled={shouldBlockHomeClick}
       >
@@ -24,7 +27,7 @@ export default function Header() {
       </Link>
 
       <Link
-        to="/about"
+        href="/about"
         className={`nav-link ${isAboutActive ? 'active no-click' : ''}`}
         aria-disabled={isAboutActive}
       >
