@@ -1,20 +1,20 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import './styles.css';
 
 export default function About() {
+  const t = useTranslations('About.AboutPage');
+
   return (
     <div className="about-container">
       <div className="about-card">
-        <h1 className="about-heading">About This Project</h1>
-        <p className="about-text">
-          This application is a Star Trek Comic Strip Archive Explorer built
-          using React, TypeScript, and React Router. It fetches data dynamically
-          from the STAPI REST endpoint and features clean URL state management
-          for searching, pagination, and side-by-side details tracking.
-        </p>
+        <h1 className="about-heading">{t('heading')}</h1>
+        <p className="about-text">{t('text')}</p>
         <div className="course-info">
           <p className="course-text">
-            Developed as part of the hands-on curriculum for the{' '}
-            <strong>RS School React Course</strong>.
+            {t('courseTextStart')}
+            <strong>{t('courseLinkText')}</strong>.
           </p>
           <a
             href="https://rs.school/courses/reactjs"
@@ -22,7 +22,7 @@ export default function About() {
             rel="noopener noreferrer"
             className="course-link"
           >
-            View Course Details &rarr;
+            {t('viewCourse')}
           </a>
         </div>
       </div>

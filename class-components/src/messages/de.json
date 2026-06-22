@@ -39,6 +39,15 @@
     "text": "Seite nicht gefunden. Kehren Sie zur Startseite zurück und stöbern Sie weiter in den Comics",
     "link": "Zurück zu den Comics"
   },
+  "About": {
+    "AboutPage": {
+      "heading": "Über dieses Projekt",
+      "text": "Diese Anwendung ist ein Star Trek Comic-Archiv-Explorer, der mit React, TypeScript und React Router erstellt wurde. Sie lädt Daten dynamisch vom STAPI REST-Endpunkt und bietet ein sauberes URL-Zustandsmanagement für Suche, Seitennummerierung und Side-by-Side-Detailsverfolgung.",
+      "courseTextStart": "Entwickelt als Teil des praxisorientierten Lehrplans für den ",
+      "courseLinkText": "RS School React-Kurs",
+      "viewCourse": "Kursdetails anzeigen →"
+    }
+  },
   "Global": {
     "Header": {
       "navHome": "Startseite",
