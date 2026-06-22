@@ -1,10 +1,8 @@
-'use client';
-
-import { useTranslations } from 'next-intl';
 import './styles.css';
+import { getTranslations } from 'next-intl/server';
 
-export default function About() {
-  const t = useTranslations('About.AboutPage');
+export default async function About() {
+  const t = await getTranslations('About.AboutPage');
 
   return (
     <div className="about-container">
