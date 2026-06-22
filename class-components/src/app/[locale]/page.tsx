@@ -1,7 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
-import { Outlet, useSearchParams } from 'react-router-dom';
 import { useSearchLocalStorage } from '../../hooks/use-local-storage';
 import Search from '../../components/Search/Search';
 import './page.module.css';
@@ -11,9 +9,13 @@ import Loader from '../../components/Loader/Loader';
 import CheckItemsFlyout from '../../components/CheckItemsFlyout/CheckItemsFlyout';
 import { useComicSearch, useInvalidateComicCache } from '../../hooks/useCache';
 import { LucideRefreshCcwDot } from 'lucide-react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-export default function Home() {
-  const [searchParams, setSearchParams] = useSearchParams();
+export default function Home({ children }: Readonly<{ children: React.ReactNode }>) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const [storedTerm, setStoredTerm] = useSearchLocalStorage();
   const { invalidateAll } = useInvalidateComicCache();
 
@@ -28,36 +30,26 @@ export default function Home() {
     targetPage
   );
 
-  useEffect(() => {
-    if (!searchParams.has('search') && currentSearch) {
-      const nextParams = new URLSearchParams(searchParams);
-      nextParams.set('search', currentSearch);
-      setSearchParams(nextParams, { replace: true });
-    }
-
-    if (!searchParams.has('page')) {
-      const nextParams = new URLSearchParams(searchParams);
-      nextParams.set('page', '1');
-      setSearchParams(nextParams, { replace: true });
-    }
-  }, [currentSearch, searchParams, setSearchParams]);
-
   const handleSearchSubmit = (newTerm: string) => {
     setStoredTerm(newTerm);
-    const nextParams = new URLSearchParams(searchParams);
+
+    const nextParams = new URLSearchParams(searchParams.toString());
+
     if (newTerm) {
       nextParams.set('search', newTerm);
     } else {
       nextParams.delete('search');
     }
     nextParams.set('page', '1');
-    setSearchParams(nextParams);
+
+    router.push(`${pathname}?${nextParams.toString()}`);
   };
 
   const handlePageChange = (zeroIndexedPage: number) => {
-    const nextParams = new URLSearchParams(searchParams);
+    const nextParams = new URLSearchParams(searchParams.toString());
     nextParams.set('page', String(zeroIndexedPage + 1));
-    setSearchParams(nextParams);
+
+    router.push(`${pathname}?${nextParams.toString()}`);
   };
 
   const items = data?.comicStrips ?? [];
@@ -113,9 +105,7 @@ export default function Home() {
           )}
         </section>
 
-        <section className="outlet-panel">
-          <Outlet />
-        </section>
+        <section className="outlet-panel">{children}</section>
       </div>
     </div>
   );

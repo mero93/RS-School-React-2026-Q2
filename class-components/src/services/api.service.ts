@@ -21,6 +21,7 @@ export const ApiService = {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: body.toString(),
+        cache: 'no-store',
       }
     );
 
@@ -43,7 +44,7 @@ export const ApiService = {
       throw new Error(`API Single Fetch Error: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as { comicStrip: ComicStrip };
     return data.comicStrip;
   },
 };
