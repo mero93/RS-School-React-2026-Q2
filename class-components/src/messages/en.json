@@ -34,6 +34,11 @@
       "error": "An error occurred"
     }
   },
+  "NotFound": {
+    "heading": "Page not found",
+    "text": "Page not found. Return to home page and continue browsing comics",
+    "link": "Return to Comics"
+  },
   "Global": {
     "Header": {
       "navHome": "Home",

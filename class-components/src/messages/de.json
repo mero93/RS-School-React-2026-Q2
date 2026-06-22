@@ -34,6 +34,11 @@
       "error": "Ein Fehler ist aufgetreten"
     }
   },
+  "NotFound": {
+    "heading": "Seite nicht gefunden",
+    "text": "Seite nicht gefunden. Kehren Sie zur Startseite zurück und stöbern Sie weiter in den Comics",
+    "link": "Zurück zu den Comics"
+  },
   "Global": {
     "Header": {
       "navHome": "Startseite",

@@ -27,7 +27,7 @@ export default function LanguageSwitcher() {
       className="lang-toggle-btn"
       title={t('label')}
     >
-      {currentLocale === 'en' ? 'DE' : 'EN'}
+      {currentLocale === 'en' ? 'EN' : 'DE'}
     </button>
   );
 }
