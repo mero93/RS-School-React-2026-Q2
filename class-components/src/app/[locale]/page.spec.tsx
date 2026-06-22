@@ -2,7 +2,7 @@ import { screen, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Routes, Route } from 'react-router-dom';
 import type { UseQueryResult } from '@tanstack/react-query';
-import Home from './Home';
+import Home from './page';
 import * as cacheModule from '../../hooks/useCache';
 import { renderWithProviders } from '../../setupTests';
 

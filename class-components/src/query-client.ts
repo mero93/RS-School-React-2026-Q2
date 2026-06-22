@@ -1,5 +1,6 @@
-import { QueryClient } from '@tanstack/react-query';
+'use client';
 
+import { QueryClient } from '@tanstack/react-query';
 
 const CACHE_TTL = Number(import.meta.env.VITE_CACHE_TTL) || 300000;
 

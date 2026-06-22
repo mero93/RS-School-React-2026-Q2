@@ -1,3 +1,5 @@
+'use client';
+
 import './ThemeSwitcher.css';
 
 import { LucideMoonStar, LucideSun } from 'lucide-react';

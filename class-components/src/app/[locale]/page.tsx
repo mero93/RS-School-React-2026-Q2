@@ -1,8 +1,10 @@
+'use client';
+
 import { useEffect } from 'react';
 import { Outlet, useSearchParams } from 'react-router-dom';
 import { useSearchLocalStorage } from '../../hooks/use-local-storage';
 import Search from '../../components/Search/Search';
-import './Home.css';
+import './page.module.css';
 import Pagination from '../../components/Pagination/Pagination';
 import Results from '../../components/Result/Results';
 import Loader from '../../components/Loader/Loader';

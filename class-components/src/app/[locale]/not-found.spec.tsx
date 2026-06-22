@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
-import NotFound from './NotFound';
+import NotFound from './not-found';
 
 describe('NotFound Component', () => {
   it('renders the 404 error code and text content correctly', () => {
