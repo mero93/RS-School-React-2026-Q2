@@ -6,6 +6,8 @@ import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Link } from '../../i18n/routing';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
+import rsLogo from '../../assets/images/rs-logo.png';
 
 export default function Header() {
   const pathname = usePathname();
@@ -19,6 +21,15 @@ export default function Header() {
 
   return (
     <nav className="global-header">
+      <div className="logo">
+        <Image
+          src={rsLogo}
+          alt="RS School Logo"
+          width={50}
+          height={50}
+          priority
+        />
+      </div>
       <Link
         href="/"
         className={`nav-link ${isHomePath ? 'active' : ''} ${shouldBlockHomeClick ? 'no-click' : ''}`}
