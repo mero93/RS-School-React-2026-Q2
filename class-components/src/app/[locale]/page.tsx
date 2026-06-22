@@ -1,116 +1,53 @@
-'use client';
-
-import { useSearchLocalStorage } from '../../hooks/use-local-storage';
-import './page.css';
-import '../index.css';
-import Pagination from '../../components/Pagination/Pagination';
+import { handleSearchAction } from '../../actions/search';
+import Search from '../../components/Search/Search';
 import Results from '../../components/Result/Results';
-import Loader from '../../components/Loader/Loader';
-import CheckItemsFlyout from '../../components/CheckItemsFlyout/CheckItemsFlyout';
-import { useComicSearch, useInvalidateComicCache } from '../../hooks/useCache';
-import { LucideRefreshCcwDot } from 'lucide-react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import dynamic from 'next/dynamic';
-import { useTranslations } from 'next-intl';
+import ItemDetails from '../../components/ItemDetails/ItemDetails';
+import { ApiService } from '../../services/api.service';
+import { redirect } from 'next/navigation';
+import './page.css';
 
-const Search = dynamic(() => import('../../components/Search/Search'), {
-  ssr: false,
-});
+export default async function Home({
+  searchParams,
+}: Readonly<{
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}>) {
+  const params = await searchParams;
+  const currentPage = params.page;
 
-export default function Home({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const t = useTranslations('Home.BasePage');
-
-  const [storedTerm, setStoredTerm] = useSearchLocalStorage();
-  const { invalidateAll } = useInvalidateComicCache();
-
-  const currentSearch = searchParams.get('search') ?? storedTerm;
-  const currentPage = Number(searchParams.get('page') ?? '1');
-  const detailId = searchParams.get('details');
-
-  const targetPage = currentPage - 1;
-
-  const { data, isLoading, isError, error, isFetching } = useComicSearch(
-    currentSearch,
-    targetPage
-  );
-
-  const handleSearchSubmit = (newTerm: string) => {
-    setStoredTerm(newTerm);
-    const nextParams = new URLSearchParams(searchParams.toString());
-    if (newTerm) {
-      nextParams.set('search', newTerm);
-    } else {
-      nextParams.delete('search');
+  if (currentPage === undefined || currentPage === '') {
+    const urlParams = new URLSearchParams();
+    for (const [key, value] of Object.entries(params)) {
+      if (typeof value === 'string') {
+        urlParams.set(key, value);
+      }
     }
-    nextParams.set('page', '1');
-    router.push(`${pathname}?${nextParams.toString()}`);
-  };
+    urlParams.set('page', '1');
+    redirect(`?${urlParams.toString()}`);
+  }
 
-  const handlePageChange = (zeroIndexedPage: number) => {
-    const nextParams = new URLSearchParams(searchParams.toString());
-    nextParams.set('page', String(zeroIndexedPage + 1));
-    router.push(`${pathname}?${nextParams.toString()}`);
-  };
-
-  const items = data?.comicStrips ?? [];
-  const pageMetadata = data?.page ?? {
-    pageNumber: targetPage,
-    pageSize: 10,
-    numberOfElements: 0,
-    totalElements: 0,
-    totalPages: 1,
-  };
+  const query = typeof params.search === 'string' ? params.search : '';
+  const pageNumber = Number(currentPage);
+  const data = await ApiService.search(query, pageNumber - 1);
 
   return (
     <div className="home-container">
       <header className="home-header">
-        <button
-          className="refresh-btn"
-          onClick={invalidateAll}
-          disabled={isFetching}
-          type="button"
-        >
-          <LucideRefreshCcwDot
-            className={isFetching ? 'refresh-animate' : ''}
-          />
-          <span>{t('refresh')}</span>
-        </button>
-        <Search
-          key={currentSearch}
-          onSearch={handleSearchSubmit}
-          initialValue={currentSearch}
-          isLoading={isLoading}
-          hasError={isError}
-        />
+        <Search initialValue={query} onSearchAction={handleSearchAction} />
       </header>
 
-      <CheckItemsFlyout />
-
-      <div className={`main-layout ${detailId ? 'has-details' : ''}`}>
+      <div className={`main-layout ${params.details ? 'has-details' : ''}`}>
         <section className="master-panel">
-          {isError && (
-            <p className="status-msg error">
-              {error instanceof Error ? error.message : t('errorDefault')}
-            </p>
-          )}
-
-          {isLoading && <p className="status-msg">{t('loading')}</p>}
-          <Loader isLoading={isLoading} />
-
-          {!isLoading && !isError && (
-            <>
-              <Results hasError={false} items={items} />
-              <Pagination page={pageMetadata} onPageChange={handlePageChange} />
-            </>
-          )}
+          <Results
+            items={data.comicStrips ?? []}
+            page={{ ...data.page, pageNumber: pageNumber - 1 }}
+          />
         </section>
 
-        <section className="outlet-panel">{children}</section>
+        {params.details && (
+          <section className="outlet-panel">
+            <ItemDetails uid={params.details as string} />
+          </section>
+        )}
       </div>
     </div>
   );

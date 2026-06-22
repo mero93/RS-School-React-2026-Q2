@@ -1,87 +1,59 @@
+'use client';
+
+import { Link } from '../../i18n/routing';
+import { useSearchParams } from 'next/navigation';
 import type { PageData } from '../../types/api-response';
 import './Pagination.css';
 
 interface PaginationProps {
   page: PageData;
-  onPageChange: (index: number) => void;
 }
 
-export default function Pagination(props: Readonly<PaginationProps>) {
-  const { page, onPageChange } = props;
+export default function Pagination({ page }: Readonly<PaginationProps>) {
   const { pageNumber, totalPages } = page;
-  const currentPage = pageNumber + 1;
+  const searchParams = useSearchParams();
+
+  const getPageHref = (p: number | string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', String(p));
+    return `?${params.toString()}`;
+  };
+
+  const getPageNumbers = () => {
+    const pages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
+  };
 
   if (totalPages <= 1) return null;
 
   return (
     <div className="pagination-container">
-      <button
-        type="button"
-        className="nav-btn"
-        disabled={pageNumber === 0}
-        onClick={() => onPageChange(pageNumber - 1)}
+      <Link
+        href={getPageHref(pageNumber)}
+        className={`nav-btn ${pageNumber === 0 ? 'disabled' : ''}`}
       >
         Prev
-      </button>
+      </Link>
 
-      {getPageNumbers(pageNumber, totalPages).map((p, idx) => {
-        const isActive = p === currentPage;
-        const isEllipsis = p === '...';
+      {getPageNumbers().map((p) => (
+        <Link
+          key={p}
+          href={getPageHref(p)}
+          className={`page-btn ${p === pageNumber + 1 ? 'active' : ''}`}
+        >
+          {p}
+        </Link>
+      ))}
 
-        return (
-          <button
-            key={`page-nav-${p}-${idx}`}
-            type="button"
-            disabled={isEllipsis}
-            onClick={() => typeof p === 'number' && onPageChange(p - 1)}
-            className={`page-btn ${isActive ? 'active' : ''} ${
-              isEllipsis ? 'ellipsis' : ''
-            }`}
-          >
-            {p}
-          </button>
-        );
-      })}
-
-      <button
-        type="button"
-        className="nav-btn"
-        disabled={pageNumber >= totalPages - 1}
-        onClick={() => onPageChange(pageNumber + 1)}
+      <Link
+        href={getPageHref(pageNumber + 2)}
+        className={`nav-btn ${pageNumber >= totalPages - 1 ? 'disabled' : ''}`}
       >
         Next
-      </button>
+      </Link>
     </div>
   );
 }
-
-const getPageNumbers = (
-  pageNumber: number,
-  totalPages: number
-): (number | string)[] => {
-  const current = pageNumber + 1;
-  const pages: (number | string)[] = [];
-
-  pages.push(1);
-
-  if (current > 3) {
-    pages.push('...');
-  }
-
-  const start = Math.max(2, current - 1);
-  const end = Math.min(totalPages - 1, current + 1);
-
-  for (let i = start; i <= end; i++) {
-    pages.push(i);
-  }
-
-  if (current < totalPages - 2) {
-    pages.push('...');
-  }
-
-  if (totalPages > 1) {
-    pages.push(totalPages);
-  }
-
-  return pages;
-};

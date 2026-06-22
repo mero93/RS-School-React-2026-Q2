@@ -1,41 +1,26 @@
 'use client';
 
-import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useCheckItemStore } from '../../store/check-item.store';
 import type { ComicStrip } from '../../types/comic-strip';
+import type { PageData } from '../../types/api-response';
 import ItemCard from '../ItemCard/ItemCard';
+import Pagination from '../Pagination/Pagination';
 import { useTranslations } from 'next-intl';
 import './Results.css';
+import { Link } from '../../i18n/routing';
 
 interface ResultsProps {
-  hasError: boolean;
   items: ComicStrip[];
+  page: PageData;
 }
 
-export default function Results(props: Readonly<ResultsProps>) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+export default function Results({ items, page }: Readonly<ResultsProps>) {
   const t = useTranslations('Home.Results');
-
   const { selectedItems, toggleItem } = useCheckItemStore();
-
-  const openCard = (uid: string) => {
-    const nextParams = new URLSearchParams(searchParams.toString());
-    nextParams.set('details', uid);
-    router.push(`${pathname}?${nextParams.toString()}`);
-  };
-
-  if (props.hasError) {
-    throw new Error(t('crashSimulation'));
-  }
-
-  const items = props.items ?? [];
 
   return (
     <div className="results-container">
       <h3 className="results-heading">{t('heading')}</h3>
-
       <div className="results-grid">
         {items.length === 0 ? (
           <p className="results-empty-state">{t('emptyState')}</p>
@@ -51,12 +36,16 @@ export default function Results(props: Readonly<ResultsProps>) {
                   toggleItem(item);
                 }}
                 isSelected={isSelected}
-                openCard={openCard}
+                renderLink={(children) => (
+                  <Link href={`?details=${item.uid}`}>{children}</Link>
+                )}
               />
             );
           })
         )}
       </div>
+
+      <Pagination page={page} />
     </div>
   );
 }
