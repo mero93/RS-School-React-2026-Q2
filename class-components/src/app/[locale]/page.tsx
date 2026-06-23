@@ -1,5 +1,6 @@
 import { handleSearchAction } from '../../actions/search';
 import Search from '../../components/Search/Search';
+import SearchPersistence from '../../components/Search/SearchPersistence';
 import Results from '../../components/Result/Results';
 import ItemDetails from '../../components/ItemDetails/ItemDetails';
 import { ApiService } from '../../services/api.service';
@@ -27,10 +28,13 @@ export default async function Home({
 
   const query = typeof params.search === 'string' ? params.search : '';
   const pageNumber = Number(currentPage);
+
   const data = await ApiService.search(query, pageNumber - 1);
 
   return (
     <div className="home-container">
+      <SearchPersistence />
+
       <header className="home-header">
         <Search initialValue={query} onSearchAction={handleSearchAction} />
       </header>
