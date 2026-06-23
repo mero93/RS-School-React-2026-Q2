@@ -1,3 +1,5 @@
+'use client';
+
 import { LucideDownload, LucideEraser } from 'lucide-react';
 import { useCheckItemStore } from '../../store/check-item.store';
 import './CheckItemsFlyout.css';

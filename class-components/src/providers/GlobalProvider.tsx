@@ -1,7 +1,5 @@
 import type { ReactNode } from 'react';
 import ThemeProvider from './ThemeProvider';
-import { queryClient } from '../query-client';
-import { QueryClientProvider } from '@tanstack/react-query';
 import { NextIntlClientProvider, type AbstractIntlMessages } from 'next-intl';
 
 interface GlobalProviderProps {
@@ -16,10 +14,8 @@ export default function GlobalProvider({
   messages,
 }: Readonly<GlobalProviderProps>) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <NextIntlClientProvider locale={locale} messages={messages}>
-        <ThemeProvider>{children}</ThemeProvider>
-      </NextIntlClientProvider>
-    </QueryClientProvider>
+    <NextIntlClientProvider locale={locale} messages={messages}>
+      <ThemeProvider>{children}</ThemeProvider>
+    </NextIntlClientProvider>
   );
 }

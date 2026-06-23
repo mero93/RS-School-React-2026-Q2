@@ -1,10 +1,19 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import '../index.css';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import Header from '../../components/Header/Header';
 import GlobalProvider from '../../providers/GlobalProvider';
 import { notFound } from 'next/navigation';
 import { getMessages } from 'next-intl/server';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = {
+  title: 'Comic Strips',
+  icons: {
+    icon: '/favicon.svg',
+  },
+};
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -26,7 +35,6 @@ export default async function RootLayout({
 
   return (
     <html lang={locale || 'en'}>
-      <head></head>
       <body>
         <ErrorBoundary>
           <GlobalProvider locale={locale} messages={messages}>
