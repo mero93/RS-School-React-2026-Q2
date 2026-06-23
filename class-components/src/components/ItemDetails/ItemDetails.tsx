@@ -1,82 +1,43 @@
-import { useSearchParams } from 'react-router-dom';
+import { getTranslations } from 'next-intl/server';
 import './ItemDetails.css';
-import { useComicDetail } from '../../hooks/useCache';
+import { ApiService } from '../../services/api.service';
+import Link from 'next/link';
 
-export default function ItemDetails() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const detailId = searchParams.get('details');
+export default async function ItemDetails({ uid }: Readonly<{ uid: string }>) {
+  const t = await getTranslations('Home.ItemDetails');
+  const comic = await ApiService.getOne(uid);
 
-  const { data: comic, isLoading, isError, error } = useComicDetail(detailId);
+  const formatDate = (y?: number, m?: number, d?: number) =>
+    y ? `${d ? d + '/' : ''}${m ? m + '/' : ''}${y}` : 'N/A';
 
-  const handleClose = () => {
-    const nextParams = new URLSearchParams(searchParams);
-    nextParams.delete('details');
-    setSearchParams(nextParams);
-  };
-
-  const formatDate = (year?: number, month?: number, day?: number): string => {
-    if (!year) return 'N/A';
-    return `${day ? day + '/' : ''}${month ? month + '/' : ''}${year}`;
-  };
-
-  if (!detailId) return null;
-
-  const dateFrom = formatDate(
-    comic?.publishedYearFrom,
-    comic?.publishedMonthFrom,
-    comic?.publishedDayFrom
-  );
-  const dateTo = formatDate(
-    comic?.publishedYearTo,
-    comic?.publishedMonthTo,
-    comic?.publishedDayTo
-  );
-  const dateRange =
-    dateFrom || dateTo
-      ? `${dateFrom || 'N/A'} - ${dateTo || 'Present'}`
-      : 'N/A';
+  const dateRange = `${formatDate(comic.publishedYearFrom, comic.publishedMonthFrom, comic.publishedDayFrom)} - ${
+    formatDate(
+      comic.publishedYearTo,
+      comic.publishedMonthTo,
+      comic.publishedDayTo
+    ) || 'Present'
+  }`;
 
   return (
     <div className="details-panel">
       <div className="details-header">
-        <h2>Comic Details</h2>
-        <button
-          type="button"
-          className="close-btn"
-          onClick={handleClose}
-          aria-label="Close details panel"
-        >
+        <h2>{t('heading')}</h2>
+        <Link href="?" className="close-btn">
           &times;
-        </button>
+        </Link>
       </div>
-
       <div className="details-content">
-        {isError && (
-          <p className="details-status error">
-            {error instanceof Error ? error.message : 'An error occurred'}
+        <div className="comic-info">
+          <h3 className="comic-title">{comic.title}</h3>
+          <p>
+            <strong>{t('publishedRange')}</strong> {dateRange}
           </p>
-        )}
-
-        {isLoading && <p className="details-status">Loading details...</p>}
-
-        {!isLoading && !isError && comic && (
-          <div className="comic-info">
-            <h3 className="comic-title">{comic.title}</h3>
-            <div className="meta-group">
-              <p>
-                <strong>Published Range:</strong> {dateRange}
-              </p>
-              {!!comic.numberOfPages && (
-                <p>
-                  <strong>Length:</strong> {comic.numberOfPages} Pages
-                </p>
-              )}
-            </div>
-            <div className="uid-badge">
-              <small>Catalog ID: {comic.uid}</small>
-            </div>
-          </div>
-        )}
+          {!!comic.numberOfPages && (
+            <p>
+              <strong>{t('length')}</strong> {comic.numberOfPages} {t('pages')}
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

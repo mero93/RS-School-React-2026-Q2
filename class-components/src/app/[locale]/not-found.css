@@ -1,0 +1,36 @@
+.not-found-container {
+  text-align: center;
+  padding: 40px 20px;
+  min-height: calc(100vh - 200px);
+}
+
+.error-code {
+  font-size: 96px;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1;
+  background: linear-gradient(45deg, var(--accent), #ff4a4a);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.not-found-heading {
+  font-size: 24px;
+  color: var(--text-h);
+  margin: 16px 0 8px 0;
+}
+
+.not-found-text {
+  font-size: 16px;
+  color: var(--text);
+  max-width: 400px;
+  margin: 0 0 32px 0;
+  line-height: 1.5;
+}
+
+.not-found-container .counter {
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+}

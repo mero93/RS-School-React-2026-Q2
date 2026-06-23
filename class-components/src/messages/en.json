@@ -1,0 +1,60 @@
+{
+  "Home": {
+    "BasePage": {
+      "refresh": "Refresh",
+      "loading": "Loading records...",
+      "errorDefault": "An error occurred"
+    },
+    "Search": {
+      "placeholder": "Search Star Trek Comics...",
+      "searchBtn": "Search",
+      "loadingBtn": "..."
+    },
+    "Results": {
+      "heading": "Results Area",
+      "emptyState": "No results found. Try a different search term.",
+      "crashSimulation": "Simulation: Results component crashed!",
+      "ItemCard": {
+        "published": "Published:",
+        "present": "Present",
+        "pages": "Pages:"
+      }
+    },
+    "Loader": {
+      "text": "Loading Comics data..."
+    },
+    "ItemDetails": {
+      "heading": "Comic Details",
+      "publishedRange": "Published Range:",
+      "length": "Length:",
+      "pages": "Pages",
+      "catalogId": "Catalog ID:",
+      "loading": "Loading details...",
+      "noDetails": "No details found.",
+      "error": "An error occurred"
+    }
+  },
+  "NotFound": {
+    "heading": "Page not found",
+    "text": "Page not found. Return to home page and continue browsing comics",
+    "link": "Return to Comics"
+  },
+  "About": {
+    "AboutPage": {
+      "heading": "About This Project",
+      "text": "This application is a Star Trek Comic Strip Archive Explorer built using React, TypeScript, and React Router. It fetches data dynamically from the STAPI REST endpoint and features clean URL state management for searching, pagination, and side-by-side details tracking.",
+      "courseTextStart": "Developed as part of the hands-on curriculum for the ",
+      "courseLinkText": "RS School React Course",
+      "viewCourse": "View Course Details →"
+    }
+  },
+  "Global": {
+    "Header": {
+      "navHome": "Home",
+      "navAbout": "About"
+    },
+    "LanguageSwitcher": {
+      "label": "Language"
+    }
+  }
+}

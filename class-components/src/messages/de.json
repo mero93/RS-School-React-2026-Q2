@@ -1,0 +1,60 @@
+{
+  "Home": {
+    "BasePage": {
+      "refresh": "Aktualisieren",
+      "loading": "Datensätze werden geladen...",
+      "errorDefault": "Ein Fehler ist aufgetreten"
+    },
+    "Search": {
+      "placeholder": "Star Trek Comics suchen...",
+      "searchBtn": "Suche",
+      "loadingBtn": "..."
+    },
+    "Results": {
+      "heading": "Ergebnisbereich",
+      "emptyState": "Keine Ergebnisse gefunden. Versuchen Sie einen anderen Suchbegriff.",
+      "crashSimulation": "Simulation: Ergebniskomponente ist abgestürzt!",
+      "ItemCard": {
+        "published": "Veröffentlicht:",
+        "present": "Gegenwart",
+        "pages": "Seiten:"
+      }
+    },
+    "Loader": {
+      "text": "Comic-Daten werden geladen..."
+    },
+    "ItemDetails": {
+      "heading": "Comic-Details",
+      "publishedRange": "Veröffentlichungszeitraum:",
+      "length": "Länge:",
+      "pages": "Seiten",
+      "catalogId": "Katalog-ID:",
+      "loading": "Details werden geladen...",
+      "noDetails": "Keine Details gefunden.",
+      "error": "Ein Fehler ist aufgetreten"
+    }
+  },
+  "NotFound": {
+    "heading": "Seite nicht gefunden",
+    "text": "Seite nicht gefunden. Kehren Sie zur Startseite zurück und stöbern Sie weiter in den Comics",
+    "link": "Zurück zu den Comics"
+  },
+  "About": {
+    "AboutPage": {
+      "heading": "Über dieses Projekt",
+      "text": "Diese Anwendung ist ein Star Trek Comic-Archiv-Explorer, der mit React, TypeScript und React Router erstellt wurde. Sie lädt Daten dynamisch vom STAPI REST-Endpunkt und bietet ein sauberes URL-Zustandsmanagement für Suche, Seitennummerierung und Side-by-Side-Detailsverfolgung.",
+      "courseTextStart": "Entwickelt als Teil des praxisorientierten Lehrplans für den ",
+      "courseLinkText": "RS School React-Kurs",
+      "viewCourse": "Kursdetails anzeigen →"
+    }
+  },
+  "Global": {
+    "Header": {
+      "navHome": "Startseite",
+      "navAbout": "Über uns"
+    },
+    "LanguageSwitcher": {
+      "label": "Sprache"
+    }
+  }
+}
